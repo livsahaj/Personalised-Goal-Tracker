@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f1117">
 <link rel="manifest" href="./manifest.json">
-<title>LivSahaj Goal Tracker</title>
+<title>LivSahaj</title>
 <style>
 /* ── TOKENS ── */
 :root{
@@ -48,7 +48,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
 /* ── SHELL ── */
-.app{display:grid;grid-template-rows:54px 1fr;height:100vh;overflow:hidden}
+.app{display:grid;grid-template-rows:54px 1fr;height:100vh;height:100dvh;overflow:hidden}
 
 /* ── HEADER ── */
 .hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.1rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;position:relative}
@@ -59,6 +59,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .hdr-clock{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none}
 .hdr-clock-time{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1}
 .hdr-clock-date{font-family:var(--mono);font-size:0.62rem;color:var(--text2);margin-top:1px;letter-spacing:.02em}
+/* Inline clock (new — right side of header) */
+.hdr-clock-inline{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0}
+.hdr-clock-inline .hdr-clock-time{font-family:var(--mono);font-size:0.88rem;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1}
+.hdr-clock-inline .hdr-clock-date{font-family:var(--mono);font-size:0.58rem;color:var(--text2);letter-spacing:.02em}
 .hdr-right{display:flex;align-items:center;gap:0.7rem;flex-shrink:0}
 .hdr-date{font-family:var(--mono);font-size:0.76rem;color:var(--text2);white-space:nowrap}
 .hdr-xp{display:flex;align-items:center;gap:0.5rem;min-width:220px;max-width:340px;flex:1}
@@ -73,7 +77,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .main{display:flex;overflow:hidden;min-height:0;position:relative}
 
 /* ── TRACKER (normal flex child, always fills remaining space) ── */
-.tracker{flex:1;min-width:0;overflow-y:auto;padding:1.15rem;transition:filter .22s,opacity .22s;position:relative;z-index:1}
+.tracker{flex:1;min-width:0;overflow-y:auto;padding:1.15rem 1.15rem 52px;transition:filter .22s,opacity .22s;position:relative;z-index:1}
 .tracker.blurred{filter:blur(3px);opacity:0.38;pointer-events:none;user-select:none}
 
 /* ── BACKDROP (sits over tracker, click to close panel) ── */
@@ -142,6 +146,142 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .ddots{display:flex;flex-direction:column;gap:2px;opacity:.35}
 .ddr{display:flex;gap:2px}
 .dd{width:2.5px;height:2.5px;border-radius:50%;background:var(--text2)}
+
+/* ── HEADER DROPDOWN NAV ── */
+.brand-nav{display:flex;align-items:center;gap:0;cursor:pointer;user-select:none;position:relative}
+.brand-nav-caret{font-size:0.6rem;color:var(--text3);margin-left:0.3rem;transition:transform var(--tr)}
+.brand-nav.open .brand-nav-caret{transform:rotate(180deg)}
+.nav-dropdown{
+  position:absolute;top:calc(100% + 8px);left:0;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--r);
+  min-width:200px;z-index:8000;
+  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  overflow:hidden;
+  display:none;
+  flex-direction:column;
+}
+.brand-nav.open .nav-dropdown{display:flex}
+.nav-dd-item{
+  display:flex;align-items:center;gap:0.65rem;
+  padding:0.65rem 1rem;
+  font-size:0.83rem;color:var(--text2);
+  cursor:pointer;transition:background var(--tr);
+  position:relative;
+}
+.nav-dd-item:hover{background:var(--bg3);color:var(--text)}
+.nav-dd-item.locked{opacity:0.45}
+.nav-dd-item .lock-badge{font-size:0.65rem;margin-left:auto;color:var(--text3)}
+.nav-dd-sep{height:1px;background:var(--border);margin:0.2rem 0}
+
+/* ── LOCKED TABS ── */
+/* Body class drives all lock state — CSS-only, no per-tab JS needed */
+body.tier-free .tab-i[data-tier="pro"],
+body.tier-free .tab-i[data-tier="max"],
+body.tier-pro  .tab-i[data-tier="max"]{
+  opacity:0.42;
+  cursor:pointer; /* still tappable — fires upgrade modal */
+}
+body.tier-free .tab-i[data-tier="pro"] .tab-lbl::after,
+body.tier-free .tab-i[data-tier="max"] .tab-lbl::after,
+body.tier-pro  .tab-i[data-tier="max"] .tab-lbl::after{
+  content:' 🔒';font-size:0.6rem;vertical-align:middle;
+}
+/* Dropdown mirrors lock state */
+body.tier-free .nav-dd-item[data-tier="pro"],
+body.tier-free .nav-dd-item[data-tier="max"],
+body.tier-pro  .nav-dd-item[data-tier="max"]{
+  opacity:0.42;
+}
+body.tier-free .nav-dd-item[data-tier="pro"] .lock-badge::before,
+body.tier-free .nav-dd-item[data-tier="max"] .lock-badge::before,
+body.tier-pro  .nav-dd-item[data-tier="max"] .lock-badge::before{
+  content:'🔒';
+}
+
+/* ── HAMBURGER (mobile/tablet) ── */
+.hbg-btn{
+  display:none;
+  width:34px;height:34px;
+  border-radius:var(--rsm);border:1px solid var(--border);
+  background:var(--bg3);color:var(--text);
+  align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;font-size:16px;
+  transition:all var(--tr);z-index:8001;position:relative;
+}
+.hbg-btn:hover{background:var(--bg4)}
+.hbg-drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(300px,85vw);
+  background:var(--bg2);border-left:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  z-index:8000;
+  transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow:-8px 0 40px rgba(0,0,0,.4);
+}
+.hbg-drawer.open{transform:translateX(0)}
+.hbg-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:7999;display:none;backdrop-filter:blur(2px);
+}
+.hbg-overlay.on{display:block}
+.hbg-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.hbg-title{font-size:0.88rem;font-weight:700;color:var(--text)}
+.hbg-close{
+  width:28px;height:28px;border-radius:6px;
+  border:1px solid var(--border);background:var(--bg3);
+  color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.hbg-inds{padding:0.75rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:0.45rem}
+.hbg-tabs{flex:1;overflow-y:auto;padding:0.3rem 0}
+.hbg-tab{
+  display:flex;align-items:center;gap:0.65rem;
+  padding:0.7rem 1rem;cursor:pointer;
+  font-size:0.85rem;color:var(--text2);
+  border-left:2px solid transparent;
+  transition:all var(--tr);
+}
+.hbg-tab:hover{background:var(--bg3);color:var(--text)}
+.hbg-tab.on{background:var(--bg3);border-left-color:var(--accent);color:var(--text)}
+.hbg-tab .hbg-ico{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+/* Locked state in drawer */
+body.tier-free .hbg-tab[data-tier="pro"],
+body.tier-free .hbg-tab[data-tier="max"],
+body.tier-pro  .hbg-tab[data-tier="max"]{opacity:0.42}
+body.tier-free .hbg-tab[data-tier="pro"] .hbg-lbl::after,
+body.tier-free .hbg-tab[data-tier="max"] .hbg-lbl::after,
+body.tier-pro  .hbg-tab[data-tier="max"] .hbg-lbl::after{content:' 🔒';font-size:0.65rem}
+.hbg-foot{padding:0.65rem 1rem;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:0.45rem}
+.hbg-foot-row{display:flex;gap:0.4rem}
+
+/* ── APP FOOTER ── */
+.app-footer{
+  position:fixed;bottom:0;left:0;right:0;
+  height:36px;z-index:500;
+  background:var(--bg2);border-top:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;padding:0 1rem;gap:0.5rem;
+  font-size:0.62rem;color:var(--text3);
+}
+.app-footer-left{display:flex;align-items:center;gap:0.35rem;min-width:0}
+.app-footer-center{display:flex;align-items:center;gap:0.5rem;white-space:nowrap}
+.app-footer-right{display:flex;align-items:center;justify-content:flex-end;gap:0.35rem}
+.app-footer a{color:var(--text3);text-decoration:none;transition:color var(--tr);white-space:nowrap}
+.app-footer a:hover{color:var(--text2)}
+.app-footer-sep{color:var(--text3);opacity:0.4}
+.app-footer-share{
+  width:22px;height:22px;border-radius:4px;
+  border:1px solid var(--border);background:var(--bg3);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--text3);cursor:pointer;text-decoration:none;
+  font-size:0.68rem;transition:all var(--tr);
+}
+.app-footer-share:hover{border-color:var(--accent);color:var(--accent);background:var(--accent2)}
 
 /* ── FOOTER ── */
 /* ── TIMER COMPLETE OVERLAY ── */
@@ -355,11 +495,11 @@ canvas{display:block;width:100%!important}
   .app{grid-template-rows:50px 1fr;height:100%;height:100dvh}
 
   .hdr{padding:0 0.75rem;gap:0.4rem}
-  .brand-name{display:none} /* hide text entirely on mobile — DT mark stays */
-  .hdr-clock{position:absolute;left:50%;transform:translateX(-50%);pointer-events:none}
-  .hdr-clock-time{font-size:0.9rem;letter-spacing:.06em}
-  .hdr-clock-date{display:none}
+  .brand-name{display:none}
+  .hdr-clock-inline .hdr-clock-date{display:none}
+  .hdr-clock-inline .hdr-clock-time{font-size:0.82rem}
   .hdr-xp{display:none}
+  .app-footer{display:none} /* footer hidden on mobile — info lives in drawer */
 
   .main{flex-direction:column;overflow:hidden;position:relative}
 
@@ -415,28 +555,10 @@ canvas{display:block;width:100%!important}
     padding:0.85rem;
   }
 
-  /* Bottom nav */
-  .sb{
-    position:fixed;bottom:0;left:0;right:0;
-    width:100%;height:60px;
-    border-left:none;border-top:1px solid var(--border);
-    flex-direction:row;flex-wrap:nowrap;
-    z-index:300;
-  }
-  .sb-inds{display:none}
-  .rk-block{display:none}
-  .tab-list{display:flex;flex-direction:row;flex:1;overflow-x:auto;scrollbar-width:none;padding:0;align-items:stretch}
-  .tab-list::-webkit-scrollbar{display:none}
-  .tab-i{
-    flex:1;min-width:48px;
-    border-left:none;border-bottom:none;border-top:2px solid transparent;
-    flex-direction:column;padding:4px 2px 2px;
-    gap:1px;align-items:center;justify-content:center;
-  }
-  .tab-i.on{border-left:none;border-top-color:var(--accent)}
-  .tab-ico{font-size:18px;width:auto}
-  .tab-lbl{font-size:0.58rem;letter-spacing:.01em}
-  .sb-foot{display:none}
+  /* Mobile: sidebar hidden — hamburger drawer replaces it */
+  .sb{display:none}
+  .hbg-btn{display:flex}
+  .tracker{overflow-y:auto;padding:0.75rem 0.75rem 0.5rem}
 
   .overlay{padding:0;align-items:flex-end}
   .modal{width:100%;max-height:92dvh;border-radius:16px 16px 0 0;overflow-y:auto}
@@ -472,17 +594,22 @@ canvas{display:block;width:100%!important}
 
 <!-- HEADER -->
 <header class="hdr">
+  <!-- Left: brand mark only -->
   <div class="brand">
     <div class="brand-mark">DT</div>
-    <span class="brand-name">LivSahaj Goal Tracker <span style="font-weight:400;color:var(--text2);font-size:0.78rem;letter-spacing:0">— You are your life coach</span></span>
+    <span class="brand-name">LivSahaj Goal Tracker</span>
   </div>
+
   <div class="hdr-gap"></div>
-  <div class="hdr-clock">
-    <div class="hdr-clock-time" id="hdrClock">--:--:--</div>
-    <div class="hdr-clock-date" id="hdrDate"></div>
-  </div>
-  <div class="hdr-gap"></div>
+
+  <!-- Right: clock + XP + theme + hamburger -->
+  <!-- Hamburger button (mobile only) -->
+  <button class="hbg-btn" id="hbgBtn" onclick="openDrawer()" aria-label="Open menu">☰</button>
   <div class="hdr-right">
+    <div class="hdr-clock-inline">
+      <span class="hdr-clock-time" id="hdrClock">--:--:--</span>
+      <span class="hdr-clock-date" id="hdrDate"></span>
+    </div>
     <div class="hdr-xp">
       <span class="xp-lbl">XP</span>
       <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
@@ -500,6 +627,7 @@ canvas{display:block;width:100%!important}
 
   <!-- TASK TRACKER -->
   <div class="tracker" id="tracker">
+    <div class="warn-bar" id="warnBar">⚡ Heavy day — 3+ high priority tasks pending. Consider rescheduling one.</div>
     <!-- Stats strip — mobile only -->
     <div class="mob-strip" id="mobStrip">
       <span>XP</span>&nbsp;<span id="mobXP">0/0</span>
@@ -583,22 +711,22 @@ canvas{display:block;width:100%!important}
     <div class="tab-list">
       <div class="tab-i" onclick="toggleTab('focus',this)"><div class="tab-ico">🎯</div><div class="tab-lbl">Focus</div></div>
       <div class="tab-i" onclick="toggleTab('coach',this)"><div class="tab-ico">🧠</div><div class="tab-lbl">Life Coach</div></div>
-      <div class="tab-i" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
-      <div class="tab-i" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
-      <div class="tab-i" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
       <div class="tab-i" onclick="toggleTab('ranks',this)"><div class="tab-ico">🎖</div><div class="tab-lbl">About Ranks</div></div>
     </div>
     <div class="sb-foot">
       <!-- About + Install -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem">
-        <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/blob/main/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
         <button class="btn btn-sm btn-g" id="sbInstallBtn" style="flex:1;font-size:0.72rem;display:none" onclick="window._triggerInstall&&window._triggerInstall()">📲 Install</button>
       </div>
       <!-- Reset day -->
       <button class="btn btn-sm btn-d" style="width:100%;font-size:0.78rem;justify-content:center;text-align:center;margin-bottom:0.5rem" onclick="confirmReset()">↺ Reset day</button>
       <!-- Footer links -->
       <div style="display:flex;justify-content:center;gap:0.65rem;flex-wrap:wrap;padding-top:0.35rem;border-top:1px solid var(--border)">
-        <a href="landing.html#faq" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">F.A.Q</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">F.A.Q</a>
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
         <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">Community</a>
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
@@ -606,8 +734,70 @@ canvas{display:block;width:100%!important}
       </div>
     </div>
   </div>
+
+<!-- ── APP FOOTER ── -->
+<footer class="app-footer">
+  <div class="app-footer-left">
+    <span style="font-weight:600;color:var(--text2)">Personal GT</span>
+    <span class="app-footer-sep">·</span>
+    <span>© 2026</span>
+  </div>
+  <div class="app-footer-center">
+    <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank">F.A.Q</a>
+    <span class="app-footer-sep">|</span>
+    <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">Community</a>
+    <span class="app-footer-sep">|</span>
+    <a href="mailto:livsahaj@gmail.com">Contact</a>
+  </div>
+  <div class="app-footer-right">
+    <a class="app-footer-share" href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="Share on X">𝕏</a>
+    <a class="app-footer-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="LinkedIn">in</a>
+    <a class="app-footer-share" href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="Reddit">r/</a>
+    <button class="app-footer-share" id="appCopyBtn" onclick="copyAppLink()" title="Copy link">⎘</button>
+  </div>
+</footer>
 </div>
 
+<!-- ── HAMBURGER OVERLAY + DRAWER ── -->
+<div class="hbg-overlay" id="hbgOverlay" onclick="closeDrawer()"></div>
+<div class="hbg-drawer" id="hbgDrawer">
+  <div class="hbg-hd">
+    <span class="hbg-title">🎯 LivSahaj Goal Tracker</span>
+    <button class="hbg-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="hbg-inds">
+    <div class="ind-row">
+      <div class="ind-ico">🔥</div>
+      <div class="ind-body"><div class="ind-lbl">Streak</div><div class="ind-val" id="hbgStr">0d</div></div>
+    </div>
+    <div class="ind-row">
+      <div class="ind-ico">✅</div>
+      <div class="ind-body"><div class="ind-lbl">Today</div><div class="ind-val" id="hbgTask">0/0</div></div>
+    </div>
+  </div>
+  <div class="hbg-tabs">
+    <div class="hbg-tab" onclick="drawerTab('focus')"><div class="hbg-ico">🎯</div><span class="hbg-lbl">Focus</span></div>
+    <div class="hbg-tab" onclick="drawerTab('coach')"><div class="hbg-ico">🧠</div><span class="hbg-lbl">Life Coach</span></div>
+    <div class="hbg-tab" data-tier="pro" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
+    <div class="hbg-tab" data-tier="pro" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
+    <div class="hbg-tab" data-tier="pro" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
+    <div class="hbg-tab" onclick="drawerTab('ranks')"><div class="hbg-ico">🎖</div><span class="hbg-lbl">About Ranks</span></div>
+  </div>
+  <div class="hbg-foot">
+    <div class="hbg-foot-row">
+      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
+      <button class="btn btn-sm btn-g" id="hbgInstallBtn" style="flex:1;font-size:0.72rem;display:none" onclick="window._triggerInstall&&window._triggerInstall()">📲 Install</button>
+    </div>
+    <button class="btn btn-sm btn-d" style="width:100%;font-size:0.78rem;text-align:center;justify-content:center" onclick="confirmReset();closeDrawer()">↺ Reset day</button>
+    <div style="display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;padding-top:0.4rem;border-top:1px solid var(--border)">
+      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none">F.A.Q</a>
+      <span style="font-size:0.6rem;color:var(--text3)">·</span>
+      <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none">Community</a>
+      <span style="font-size:0.6rem;color:var(--text3)">·</span>
+      <span style="font-size:0.6rem;color:var(--text3)">© 2026 Personal GT</span>
+    </div>
+  </div>
+</div>
 
 
 <!-- ADD/EDIT MODAL -->
@@ -672,7 +862,7 @@ canvas{display:block;width:100%!important}
     <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem" id="upgTitle">Pro feature</div>
     <div style="font-size:0.85rem;color:var(--text2);line-height:1.65;margin-bottom:1.25rem" id="upgMsg">Upgrade to Pro or Max to unlock this feature.</div>
     <div style="display:flex;gap:0.5rem;justify-content:center">
-      <a href="landing.html#pricing" target="_blank" class="btn btn-sm btn-p" style="text-decoration:none;padding:0.5rem 1rem;font-size:0.82rem">See plans</a>
+      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#pricing" target="_blank" class="btn btn-sm btn-p" style="text-decoration:none;padding:0.5rem 1rem;font-size:0.82rem">See plans</a>
       <button class="btn btn-sm btn-g" onclick="closeUpgrade()" style="font-size:0.82rem">Maybe later</button>
     </div>
   </div>
@@ -741,7 +931,93 @@ if(typeof Chart!=='undefined'){
 function save(){try{localStorage.setItem('dayops_v6',JSON.stringify(S));}catch(e){}}
 function load(){try{const r=localStorage.getItem('dayops_v6');if(r)Object.assign(S,JSON.parse(r));}catch(e){}}
 
-// ── FEATURE GATE ──────────────────────────────────────────
+// ── BRAND NAV DROPDOWN ──────────────────────────────────────────
+function toggleBrandNav(e){
+  e.stopPropagation();
+  const nav=document.getElementById('brandNav');
+  if(nav)nav.classList.toggle('open');
+}
+function closeBrandNav(){
+  const nav=document.getElementById('brandNav');
+  if(nav)nav.classList.remove('open');
+}
+function ddTab(id,e){
+  e&&e.stopPropagation();
+  closeBrandNav();
+  // Find sidebar tab and trigger
+  const tabs=document.querySelectorAll('.tab-i');
+  let found=null;
+  tabs.forEach(function(t){if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))found=t;});
+  if(found)found.click();
+}
+document.addEventListener('click',function(e){
+  const nav=document.getElementById('brandNav');
+  if(nav&&!nav.contains(e.target))closeBrandNav();
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeBrandNav();closeDrawer();}});
+
+// ── HAMBURGER DRAWER ──────────────────────────────────────────
+function openDrawer(){
+  document.getElementById('hbgDrawer').classList.add('open');
+  document.getElementById('hbgOverlay').classList.add('on');
+  document.body.style.overflow='hidden';
+  // Sync active tab state in drawer
+  syncDrawerState();
+}
+function closeDrawer(){
+  document.getElementById('hbgDrawer').classList.remove('open');
+  document.getElementById('hbgOverlay').classList.remove('on');
+  document.body.style.overflow='';
+}
+function syncDrawerState(){
+  // Sync stats
+  const str=document.getElementById('hbgStr');
+  const tsk=document.getElementById('hbgTask');
+  if(str)str.textContent=S.streak+'d';
+  const done=S.tasks.filter(function(t){return t.status==='done';}).length;
+  if(tsk)tsk.textContent=done+'/'+S.tasks.length;
+  // Sync active tab highlight
+  document.querySelectorAll('.hbg-tab').forEach(function(t){t.classList.remove('on');});
+  if(S.openTab){
+    document.querySelectorAll('.hbg-tab').forEach(function(t){
+      if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+S.openTab+"'"))t.classList.add('on');
+    });
+  }
+}
+function drawerTab(id){
+  closeDrawer();
+  // Small delay so drawer closes visually before panel opens
+  setTimeout(function(){
+    const tabs=document.querySelectorAll('.tab-i');
+    let found=null;
+    tabs.forEach(function(t){if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))found=t;});
+    if(found)found.click();
+  },120);
+}
+// Also show install in drawer when prompt fires
+window.addEventListener('beforeinstallprompt',function(){
+  const b=document.getElementById('hbgInstallBtn');
+  if(b)b.style.display='';
+},true);
+
+// ── TIER BODY CLASS — drives all CSS lock states ──────────────────────────────────────────
+function applyTierClass(){
+  document.body.classList.remove('tier-free','tier-pro','tier-max');
+  document.body.classList.add('tier-'+(S.tier||'free'));
+}
+
+// ── FOOTER COPY LINK ──────────────────────────────────────────
+function copyAppLink(){
+  var url=window.location.href;
+  var btn=document.getElementById('appCopyBtn');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      if(btn){btn.textContent='✓';setTimeout(function(){btn.textContent='⎘';},2000);}
+    });
+  }
+}
+
+
 // Tier hierarchy: free < pro < max
 const TIER_RANK={free:0,pro:1,max:2};
 const TIER_FEATURES={
@@ -775,7 +1051,7 @@ function showUpgrade(needed){
 }
 function closeUpgrade(){const m=document.getElementById('upgradeModal');if(m)m.style.display='none';}
 // Dev helper — cycle tier for testing (remove before production)
-window._setTier=function(t){S.tier=t;save();toast('Tier set to: '+t);updateStats();};
+window._setTier=function(t){S.tier=t;save();applyTierClass();toast('Tier set to: '+t);updateStats();};
 
 // ═══════════════════════════════════════════
 // THEME
@@ -1869,6 +2145,7 @@ function init(){
   }
   load();
   applyTheme();
+  applyTierClass();
   updateDate();
   updateStreak();
   updateCatFilter();
