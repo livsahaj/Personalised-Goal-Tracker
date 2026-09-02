@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Personal Goal Tracker</title>
+<meta name="description" content="An offline-first goal tracker that runs entirely on your device. No account. No data collected. No subscriptions to function.">
+<meta property="og:title" content="Personal Goal Tracker">
+<meta property="og:description" content="Your goals. Your device. No account needed.">
+<meta name="theme-color" content="#07090f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+img,svg{display:block;max-width:100%}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+a{text-decoration:none;color:inherit}
+
+/* ─── TOKENS ─────────────────────────────── */
+:root{
+  --bg:        #07090f;
+  --bg2:       #0d1117;
+  --bg3:       #161b27;
+  --bg4:       #1e2636;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.13);
+  --accent:    #5b9cf6;
+  --accent-d:  #3b7de8;
+  --accent-bg: rgba(91,156,246,0.1);
+  --green:     #22c55e;
+  --green-bg:  rgba(34,197,94,0.1);
+  --amber:     #f59e0b;
+  --red:       #ef4444;
+  --purple:    #a855f7;
+  --text:      #e8edf5;
+  --text2:     #7a8aaa;
+  --text3:     #3d4f6e;
+  --mono:      'Courier New',Courier,monospace;
+  --sans:      'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --radius:    12px;
+  --radius-sm: 7px;
+  --shadow:    0 24px 80px rgba(0,0,0,.55);
+  --tr:        0.2s ease;
+}
+[data-theme="light"]{
+  --bg:        #f4f6fb;
+  --bg2:       #ffffff;
+  --bg3:       #edf0f7;
+  --bg4:       #e2e8f4;
+  --border:    rgba(0,0,0,0.07);
+  --border2:   rgba(0,0,0,0.13);
+  --accent:    #2563eb;
+  --accent-d:  #1d4ed8;
+  --accent-bg: rgba(37,99,235,0.08);
+  --green:     #16a34a;
+  --green-bg:  rgba(22,163,74,0.09);
+  --amber:     #d97706;
+  --red:       #dc2626;
+  --purple:    #9333ea;
+  --text:      #0f1726;
+  --text2:     #4a5778;
+  --text3:     #8a9ab8;
+  --shadow:    0 24px 80px rgba(0,0,0,.12);
+}
+
+/* ─── BASE ─────────────────────────────── */
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .35s ease,color .35s ease;
+}
+
+/* ─── NAV ─────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(1rem,5vw,2.5rem);
+  background:rgba(7,9,15,0.82);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid var(--border);
+  transition:background .35s ease,border-color .35s ease;
+}
+[data-theme="light"] nav{background:rgba(244,246,251,0.82);}
+.nav-brand{display:flex;align-items:center;gap:.6rem}
+.nav-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;letter-spacing:-.5px;
+  flex-shrink:0;
+}
+.nav-title{font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-link{font-size:.82rem;color:var(--text2);transition:color var(--tr);padding:.25rem .1rem}
+.nav-link:hover{color:var(--text)}
+.theme-btn{
+  width:34px;height:34px;border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:var(--text2);
+  transition:all var(--tr);
+}
+.theme-btn:hover{background:var(--bg4);color:var(--text)}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.45rem 1rem;
+  background:var(--accent);
+  color:#fff!important;border-radius:var(--radius-sm);
+  font-size:.82rem;font-weight:600;
+  transition:opacity var(--tr),transform var(--tr);
+}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+
+/* ─── HERO ─────────────────────────────── */
+.hero{
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+  align-items:center;
+  max-width:1200px;margin:0 auto;
+  padding:100px clamp(1rem,5vw,2.5rem) 80px;
+}
+.hero-copy{position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.3rem .75rem;
+  background:var(--green-bg);
+  border:1px solid rgba(34,197,94,.25);
+  border-radius:20px;
+  font-family:var(--mono);font-size:.7rem;
+  color:var(--green);
+  margin-bottom:1.75rem;
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  animation:glow 2.5s ease-in-out infinite;
+}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 var(--green)}50%{box-shadow:0 0 0 4px rgba(34,197,94,.25)}}
+h1{
+  font-size:var(--text-hero);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-.04em;
+  margin-bottom:1.25rem;
+  color:var(--text);
+}
+h1 .line2{
+  display:block;
+  background:linear-gradient(135deg,var(--accent),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-size:var(--text-md);font-weight:300;
+  color:var(--text2);line-height:1.75;
+  max-width:480px;margin-bottom:2rem;
+}
+.hero-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.75rem 1.5rem;
+  background:var(--accent);color:#fff;
+  border-radius:var(--radius-sm);
+  font-size:var(--text-base);font-weight:600;
+  transition:all .25s ease;
+  box-shadow:0 8px 32px rgba(91,156,246,.3);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(91,156,246,.4);opacity:.95}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.75rem 1.25rem;
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  font-size:var(--text-sm);color:var(--text2);
+  background:var(--bg3);
+  transition:all var(--tr);
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--text);background:var(--accent-bg)}
+.trust-pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.pill{
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.3rem .7rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:20px;
+  font-size:var(--text-xs);color:var(--text2);
+}
+.pill-icon{font-size:var(--text-xs)}
+
+/* ─── HERO DEMO ─────────────────────────────── */
+.hero-visual{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.demo-card{
+  width:100%;max-width:420px;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:box-shadow .35s ease;
+}
+[data-theme="light"] .demo-card{box-shadow:0 24px 80px rgba(0,0,0,.12)}
+.demo-header{
+  background:var(--bg3);
+  padding:.6rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.demo-dots{display:flex;gap:.4rem}
+.demo-dot{width:10px;height:10px;border-radius:50%}
+.d1{background:#ef4444}.d2{background:#f59e0b}.d3{background:#22c55e}
+.demo-title-bar{
+  font-family:var(--mono);font-size:.72rem;color:var(--text3);
+}
+.demo-clock{
+  font-family:var(--mono);font-size:.72rem;color:var(--accent);
+  letter-spacing:.06em;
+}
+.demo-body{padding:1rem}
+.demo-xp-row{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;
+  font-family:var(--mono);font-size:.68rem;color:var(--text2);
+}
+.demo-xp-bar{
+  flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;
+}
+.demo-xp-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--purple));
+  width:0%;transition:width 1.5s cubic-bezier(.4,0,.2,1);
+}
+.demo-tasks{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.85rem}
+.demo-task{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.6rem .75rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  transition:all .35s ease;
+}
+.demo-task.done{opacity:.55}
+.demo-task.done .task-name{text-decoration:line-through;color:var(--text3)}
+.task-check{
+  width:18px;height:18px;border-radius:4px;
+  border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:10px;
+  transition:all .3s ease;
+}
+.demo-task.done .task-check{
+  background:var(--green);border-color:var(--green);color:#fff;
+}
+.task-name{font-size:.78rem;font-weight:500;color:var(--text);transition:all .35s ease}
+.task-cat{
+  margin-left:auto;
+  font-size:.62rem;padding:.15rem .4rem;border-radius:3px;
+  background:var(--accent-bg);color:var(--accent);
+  flex-shrink:0;
+}
+.demo-streak{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem .75rem;
+  background:var(--bg3);border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+}
+.streak-label{font-size:.72rem;color:var(--text2)}
+.streak-val{
+  font-family:var(--mono);font-size:.8rem;font-weight:600;
+  color:var(--amber);
+}
+
+/* ─── SCROLL REVEAL ─────────────────────────────── */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .65s ease,transform .65s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+.section-h{
+  font-size:var(--text-xl);
+  font-weight:700;letter-spacing:-.03em;
+  color:var(--text);margin-bottom:1rem;
+}
+.section-sub{
+  font-size:var(--text-base);color:var(--text2);
+  max-width:540px;line-height:1.75;margin-bottom:2.5rem;
+}
+.nav-title{font-size:var(--text-sm);font-weight:700;color:var(--text);white-space:nowrap}
+.nav-link{font-size:var(--text-xs);color:var(--text2);transition:color var(--tr);padding:.25rem .1rem}
+.nav-cta{font-size:var(--text-xs);font-weight:600}
+.feat-title{font-size:var(--text-base);font-weight:600;color:var(--text);margin-bottom:.5rem}
+.feat-desc{font-size:var(--text-sm);color:var(--text2);line-height:1.65}
+.problem-card-title{font-size:var(--text-sm);font-weight:600;color:var(--text);margin-bottom:.5rem}
+.problem-card p{font-size:var(--text-sm);color:var(--text2);line-height:1.65}
+.who-text h4{font-size:var(--text-base);font-weight:600;color:var(--text);margin-bottom:.3rem}
+.who-text p{font-size:var(--text-sm);color:var(--text2);line-height:1.6}
+.tier-name{font-size:var(--text-xs);font-weight:600;color:var(--text2);margin-bottom:.5rem;letter-spacing:.04em}
+.tier-price{font-size:var(--text-2xl);font-weight:800;letter-spacing:-.04em;color:var(--text);margin-bottom:.25rem}
+.tier-price span{font-size:var(--text-base);font-weight:400;color:var(--text2)}
+.tier-period{font-size:var(--text-xs);color:var(--text3);margin-bottom:1.25rem}
+.tier-features li{font-size:var(--text-sm);color:var(--text2);line-height:1.5}
+.tier-btn{font-size:var(--text-sm);font-weight:600}
+.stat-val{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
+.stat-label{font-size:var(--text-sm);color:var(--text2);margin-top:.25rem}
+.share-section h2{font-size:var(--text-lg);font-weight:700;letter-spacing:-.02em;margin-bottom:.65rem}
+.share-section p{font-size:var(--text-sm);color:var(--text2);margin-bottom:1.75rem}
+.share-btn{font-size:var(--text-xs)}
+.feedback-copy h2{font-size:var(--text-xl);font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem}
+.feedback-copy p{font-size:var(--text-sm);color:var(--text2);line-height:1.75;margin-bottom:1.5rem}
+.feedback-form input,.feedback-form textarea{font-size:var(--text-sm)}
+.footer-name{font-size:var(--text-sm);font-weight:600;color:var(--text2)}
+.footer-copy{font-size:var(--text-xs);color:var(--text3)}
+.footer-links a{font-size:var(--text-xs)}
+
+/* ─── SECTION WRAPPER ─────────────────────────────── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(1rem,5vw,2.5rem)}
+.section{padding:clamp(60px,8vw,120px) 0}
+.section-line{width:40px;height:2px;background:var(--accent);border-radius:1px;margin-bottom:1.25rem}
+.problem-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+}
+.problem-card{
+  padding:1.5rem;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  transition:border-color var(--tr),transform var(--tr);
+  position:relative;overflow:hidden;
+}
+.problem-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--red),transparent);
+  opacity:0;transition:opacity var(--tr);
+}
+.problem-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.problem-card:hover::before{opacity:1}
+.problem-card-title{
+  font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.5rem;
+}
+.problem-card p{font-size:.82rem;color:var(--text2);line-height:1.65}
+
+/* ─── FEATURES ─────────────────────────────── */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.25rem;
+}
+.feat-card{
+  padding:1.75rem;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  transition:all .3s ease;
+  cursor:default;
+  position:relative;overflow:hidden;
+}
+.feat-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--accent-bg) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s ease;pointer-events:none;
+}
+.feat-card:hover{border-color:rgba(91,156,246,.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.25)}
+.feat-card:hover::after{opacity:1}
+.feat-icon{
+  font-size:1.5rem;margin-bottom:1rem;
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-bg);border-radius:10px;
+}
+.feat-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:.5rem}
+.feat-desc{font-size:.85rem;color:var(--text2);line-height:1.65}
+
+/* ─── STATS BAND ─────────────────────────────── */
+.stats-band{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:clamp(2rem,4vw,3rem) 0;
+}
+.stats-inner{
+  max-width:1200px;margin:0 auto;
+  padding:0 clamp(1rem,5vw,2.5rem);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:2rem;
+}
+.stat-item{text-align:center}
+.stat-val{
+  font-size:clamp(2rem,4vw,3rem);font-weight:800;
+  letter-spacing:-.04em;color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+.stat-label{font-size:.82rem;color:var(--text2);margin-top:.25rem}
+
+/* ─── WHO ─────────────────────────────── */
+.who-grid-5{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.who-grid-5 .who-card:last-child{grid-column:1/-1}
+.who-card{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1.5rem;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  transition:all .3s ease;
+  cursor:default;position:relative;overflow:hidden;
+}
+.who-card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--accent-bg) 0%,transparent 65%);
+  opacity:0;transition:opacity .3s ease;pointer-events:none;
+}
+.who-card:hover{
+  border-color:rgba(91,156,246,.3);
+  transform:translateY(-3px);
+  box-shadow:0 16px 48px rgba(0,0,0,.25);
+}
+.who-card:hover::after{opacity:1}
+.who-check{
+  width:24px;height:24px;border-radius:5px;
+  background:var(--accent-bg);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.85rem;font-weight:700;margin-top:1px;
+}
+.who-text h4{font-size:var(--text-base);font-weight:600;color:var(--text);margin-bottom:.35rem}
+.who-text p{font-size:var(--text-sm);color:var(--text2);line-height:1.65}
+
+/* Footer layout */
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-brand{display:flex;align-items:center;gap:.6rem}
+.footer-name{font-size:var(--text-sm);font-weight:600;color:var(--text2)}
+.footer-copy{font-size:var(--text-xs);color:var(--text3)}
+.footer-share{display:flex;align-items:center;gap:.5rem}
+.footer-share-label{font-size:var(--text-xs);color:var(--text3);margin-right:.25rem}
+.share-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  font-size:.82rem;color:var(--text2);cursor:pointer;
+  transition:all var(--tr);text-decoration:none;
+}
+.share-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.share-btn.copied{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+
+/* ─── PRICING ─────────────────────────────── */
+/* Unified table: tier cards + feature comparison in one structure */
+.compare-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.compare-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);table-layout:fixed}
+
+/* Feature column — 38% wide, tier columns share remaining 62% equally */
+.col-feat{width:38%}
+.col-free,.col-pro,.col-maxx{width:20.67%}
+.compare-table colgroup .col-free,.compare-table colgroup .col-pro,.compare-table colgroup .col-maxx{border-left:1px solid var(--border)}
+
+/* Tier card row — price card embedded as first thead row */
+.tier-card-row td{
+  padding:1.5rem 1.25rem 1.25rem;
+  background:var(--bg2);
+  vertical-align:top;
+  border-bottom:2px solid var(--border);
+}
+.tier-card-row .tier-cell{border-left:1px solid var(--border)}
+.tier-cell-pro{background:var(--accent-bg)}
+.tier-cell-max{background:linear-gradient(160deg,var(--bg2),rgba(168,85,247,.07))}
+.tier-sub-period{font-size:var(--text-sm);color:var(--text2);font-weight:400;margin-bottom:.2rem;line-height:1}
+.feat-col-header{font-size:var(--text-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);vertical-align:bottom;padding-bottom:1.25rem}
+/* Feature column takes remaining space, tier cols share equally */
+.col-feat{width:40%}
+.col-free,.col-pro,.col-maxx{width:20%}
+.tier-badge-inline{
+  display:inline-block;
+  background:var(--purple);color:#fff;
+  font-size:var(--text-xs);font-weight:700;
+  padding:.15rem .55rem;border-radius:4px;
+  letter-spacing:.04em;margin-bottom:.4rem;
+}
+.tier-name{font-size:var(--text-xs);font-weight:700;letter-spacing:.08em;color:var(--text2);margin-bottom:.2rem}
+.tier-price{font-size:var(--text-2xl);font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1}
+.tier-price span{font-size:var(--text-xs);font-weight:400;color:var(--text2)}
+.tier-period{font-size:var(--text-xs);color:var(--text3);margin:.35rem 0 .75rem;line-height:1.5}
+.tier-btn{
+  display:block;text-align:center;
+  padding:.55rem .75rem;border-radius:var(--radius-sm);
+  font-size:var(--text-xs);font-weight:600;
+  transition:all var(--tr);
+}
+.tier-btn-free{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.tier-btn-free:hover{color:var(--text)}
+.tier-btn-pro{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(91,156,246,.25)}
+.tier-btn-pro:hover{opacity:.9;transform:translateY(-1px)}
+.tier-btn-max{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;box-shadow:0 4px 16px rgba(168,85,247,.2)}
+.tier-btn-max:hover{opacity:.9;transform:translateY(-1px)}
+
+/* Column label row — sticky so it stays visible when scrolling long table */
+.col-label-row th{
+  padding:.65rem 1rem;
+  background:var(--bg3);
+  color:var(--text2);font-weight:600;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  font-size:var(--text-xs);letter-spacing:.04em;text-transform:uppercase;
+  position:sticky;top:60px;z-index:2; /* sticks below the fixed nav */
+}
+.col-label-row th.feat-col{text-align:left}
+.col-label-row th.col-tier-pro{color:var(--accent);border-left:1px solid var(--border)}
+.col-label-row th.col-tier-max{color:var(--purple);border-left:1px solid var(--border)}
+.col-label-row th.col-tier-free{border-left:1px solid var(--border)}
+
+/* Data rows */
+.compare-table td{
+  padding:.7rem 1rem;border-bottom:1px solid var(--border);
+  color:var(--text2);text-align:center;vertical-align:middle;
+}
+.compare-table td:first-child{text-align:left;color:var(--text)}
+.compare-table td:not(:first-child){border-left:1px solid var(--border)}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr.section-row td{
+  background:var(--bg3);color:var(--text3);
+  font-size:var(--text-xs);font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:.5rem 1rem;border-left:none;
+}
+.compare-table tbody tr:not(.section-row):hover td{background:rgba(255,255,255,.025)}
+[data-theme="light"] .compare-table tbody tr:not(.section-row):hover td{background:rgba(0,0,0,.025)}
+.tick{color:var(--green);font-size:1rem;font-weight:700}
+.cross{color:var(--text3);font-size:.9rem}
+.tick-note{font-size:var(--text-xs);color:var(--green);font-weight:500}
+.tick-note-max{color:var(--purple)}
+
+/* FAQ 2-column grid */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 2rem;align-items:start}
+.faq-col{display:flex;flex-direction:column}
+.faq-list{display:flex;flex-direction:column;gap:.75rem;max-width:720px}
+.faq-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color var(--tr);margin-bottom:.6rem}
+.faq-item:hover{border-color:var(--border2)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1.1rem 1.25rem;
+  background:none;font-family:var(--sans);
+  font-size:var(--text-base);font-weight:500;color:var(--text);
+  text-align:left;cursor:pointer;transition:color var(--tr);
+}
+.faq-q:hover{color:var(--accent)}
+.faq-arrow{font-size:.8rem;color:var(--text3);transition:transform .25s ease;flex-shrink:0}
+.faq-q.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1),padding .35s ease;
+  padding:0 1.25rem;
+}
+.faq-a.open{max-height:400px;padding:.1rem 1.25rem 1.1rem}
+.faq-a p{font-size:var(--text-sm);color:var(--text2);line-height:1.75}
+
+/* Footer center */
+.footer-center{
+  display:flex;align-items:center;gap:.6rem;
+  position:absolute;left:50%;transform:translateX(-50%);
+}
+.footer-center-link{
+  font-size:var(--text-xs);color:var(--text3);
+  text-decoration:none;transition:color var(--tr);
+}
+.footer-center-link:hover{color:var(--text2)}
+.footer-center-sep{color:var(--text3);font-size:var(--text-xs)}
+
+/* ─── FEEDBACK ─────────────────────────────── */
+.feedback-box{
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:clamp(2rem,4vw,3rem);
+}
+.feedback-copy h2{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.75rem}
+.feedback-copy p{font-size:.9rem;color:var(--text2);line-height:1.75;margin-bottom:1.5rem}
+.feedback-form input,.feedback-form textarea{
+  width:100%;
+  padding:.7rem 1rem;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:var(--sans);font-size:.88rem;
+  outline:none;
+  transition:border-color var(--tr);
+  margin-bottom:.75rem;resize:vertical;
+}
+.feedback-form input:focus,.feedback-form textarea:focus{border-color:var(--accent)}
+.feedback-form textarea{min-height:100px}
+.feedback-form input::placeholder,.feedback-form textarea::placeholder{color:var(--text3)}
+
+/* ─── SHARE ─────────────────────────────── */
+.share-section{text-align:center;padding:clamp(60px,8vw,100px) 0}
+.share-section h2{font-size:clamp(1.25rem,2.5vw,1.75rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.65rem}
+.share-section p{font-size:.92rem;color:var(--text2);margin-bottom:1.75rem}
+.share-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap}
+.share-btn{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.6rem 1.1rem;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);
+  font-size:.82rem;color:var(--text2);
+  transition:all var(--tr);
+}
+.share-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.share-btn.copied{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+
+/* ─── FOOTER ─────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:2rem clamp(1rem,5vw,2.5rem);
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-brand{display:flex;align-items:center;gap:.5rem}
+.footer-name{font-size:.8rem;font-weight:600;color:var(--text2)}
+.footer-copy{font-size:.72rem;color:var(--text3)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:.78rem;color:var(--text3);transition:color var(--tr)}
+.footer-links a:hover{color:var(--text2)}
+
+/* All page content above canvas — nav excluded (has its own z-index:9999) */
+.hero,.section,.stats-band,.share-section,footer,
+.wrap,[class*="-section"]{position:relative;z-index:1}
+
+/* ─── FLUID TYPE SCALE — clamp(min, fluid, max) ─────────────────────────────── */
+/* Scales smoothly from 375px phones → 1600px+ monitors, no breakpoint jumps   */
+:root{
+  --text-xs:   clamp(.65rem,  1.2vw,  .75rem);   /* labels, caps                */
+  --text-sm:   clamp(.75rem,  1.4vw,  .88rem);   /* body small, captions        */
+  --text-base: clamp(.875rem, 1.6vw,  1rem);     /* body                        */
+  --text-md:   clamp(.95rem,  1.8vw,  1.1rem);   /* sub-headings, hero-sub      */
+  --text-lg:   clamp(1.1rem,  2.2vw,  1.5rem);   /* section headings            */
+  --text-xl:   clamp(1.4rem,  3vw,    2.25rem);  /* section h2                  */
+  --text-2xl:  clamp(1.75rem, 4vw,    3rem);     /* tier price                  */
+  --text-hero: clamp(2rem,    5.5vw,  4rem);     /* hero h1                     */
+}
+#canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:-1;opacity:.3;
+}
+
+footer{
+  border-top:1px solid var(--border);
+  padding:1.5rem clamp(1rem,5vw,2.5rem);
+  position:relative;
+}
+
+/* ─── MOBILE ─────────────────────────────── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:3rem;min-height:auto;padding-top:90px}
+  .hero-copy{order:1}.hero-visual{order:2}
+  .problem-grid{grid-template-columns:1fr}
+  .who-grid-5{grid-template-columns:1fr}
+  .who-grid-5 .who-card:last-child{grid-column:auto}
+  .tier-header-row{grid-template-columns:1fr;max-width:440px;margin:0 auto 2rem}
+  .compare-wrap{font-size:.78rem}
+  .compare-table{table-layout:auto}
+  .col-feat{width:auto}
+  .feedback-box{grid-template-columns:1fr}
+  .footer-inner{flex-direction:column;align-items:flex-start;gap:.75rem}
+  .footer-center{position:static;transform:none;flex-direction:row}
+  .faq-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-link:not(.nav-cta){display:none}
+  .trust-pills{gap:.35rem}
+  .features-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-mark">GT</div>
+    <span class="nav-title">Personal Goal Tracker</span>
+  </div>
+  <div class="nav-right">
+    <a href="#why" class="nav-link">Why</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#who" class="nav-link">For who</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#feedback" class="nav-link">Feedback</a>
+    <a href="#faq" class="nav-link">F.A.Q</a>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">🌙</button>
+    <a href="app.html" class="nav-cta">Launch app</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero wrap">
+  <div class="hero-copy">
+    <div class="hero-badge reveal"><div class="badge-dot"></div>Privacy-first &nbsp;|&nbsp; Offline-capable &nbsp;|&nbsp; <span id="heroClock" style="font-family:var(--mono)">--:--:--</span></div>
+    <h1 class="reveal reveal-delay-1">
+      Not a habit app.<br>
+      <span class="line2">A system for your life.</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      Not a to-do list. Not a task manager. Not another habit streak counter.
+      Personal Goal Tracker is a self-accountability system that makes you
+      the architect of the person you want to become — and actually helps you get there.
+    </p>
+
+    <div class="trust-pills reveal reveal-delay-4">
+      <div class="pill"><span class="pill-icon">🔒</span> Zero data collected</div>
+      <div class="pill"><span class="pill-icon">📡</span> Works offline</div>
+      <div class="pill"><span class="pill-icon">🚫</span> No account</div>
+      <div class="pill"><span class="pill-icon">🆓</span> Free to start</div>
+    </div>
+  </div>
+
+  <!-- LIVE DEMO CARD -->
+  <div class="hero-visual reveal reveal-delay-2">
+    <div class="demo-card" id="demoCard">
+      <div class="demo-header">
+        <div class="demo-dots"><div class="demo-dot d1"></div><div class="demo-dot d2"></div><div class="demo-dot d3"></div></div>
+        <div class="demo-title-bar">Personal Goal Tracker</div>
+        <div class="demo-clock" id="demoClock">--:--:--</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-xp-row">
+          <span>XP</span>
+          <div class="demo-xp-bar"><div class="demo-xp-fill" id="demoFill"></div></div>
+          <span id="demoXP">0 / 80</span>
+          <span>🔥 3d</span>
+        </div>
+        <div class="demo-tasks" id="demoTasks">
+          <div class="demo-task" id="dt0"><div class="task-check"></div><div class="task-name">Morning workout</div><div class="task-cat">Health</div></div>
+          <div class="demo-task" id="dt1"><div class="task-check"></div><div class="task-name">Deep work block</div><div class="task-cat">Work</div></div>
+          <div class="demo-task" id="dt2"><div class="task-check"></div><div class="task-name">Read 30 minutes</div><div class="task-cat">Study</div></div>
+          <div class="demo-task" id="dt3"><div class="task-check"></div><div class="task-name">Family dinner</div><div class="task-cat">Family</div></div>
+        </div>
+        <div class="demo-streak">
+          <span class="streak-label">Today's completion</span>
+          <span class="streak-val" id="demoProgress">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section" id="why" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-line reveal"></div>
+    <h2 class="section-h reveal">Why another goal tracker?</h2>
+    <p class="section-sub reveal">Because every existing one makes the same trade — your data for their features. Personal Goal Tracker makes no such trade.</p>
+    <div class="problem-grid">
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="problem-card-title">Accounts that serve the app, not you</div>
+        <p>Most apps require an account to collect usage data, send marketing emails, and lock your data to their platform. Our account system exists for one reason — your ownership. Your data, your history, your identity. Transferable. Exportable. Yours.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="problem-card-title">Tools that break when you need them most</div>
+        <p>Unreliable internet is a fact of life — flights, commutes, remote locations, hospital waiting rooms. A productivity tool that requires a connection isn't a productivity tool. It's a web page. Personal Goal Tracker is installed on your device and works everywhere, always.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="problem-card-title">Your data on someone else's server</div>
+        <p>Your goals, your streaks, your daily habits — they reveal patterns about how you think, what you value, and how you live. That data belongs to you. In the free tier, none of it leaves your device. Not because we promise it — because the architecture makes it impossible.</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-4">
+        <div class="problem-card-title">Reports and insights behind a paywall</div>
+        <p>Many tools give you basic tracking for free, then charge you to understand your own patterns. Our free tier includes the core tracking loop. Reports and cloud sync come with Pro — not because we gatekeep insights, but because those features cost real infrastructure to run honestly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-val">0 Data</div>
+      <div class="stat-label">sent to any server, even with FREE tier</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-val" data-count="16 Ranks">0</div>
+      <div class="stat-label">Level based progression</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-val" data-count="100%">0</div>
+      <div class="stat-label">OFFLINE — no connection needed</div>
+    </div>
+    <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-val">Local</div>
+      <div class="stat-label">Stored in YOUR browser — no expiry</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section" id="features">
+  <div class="wrap">
+    <div class="section-line reveal"></div>
+    <h2 class="section-h reveal">Built for the long game</h2>
+    <p class="section-sub reveal">Not just a regular habit streak, to-do list, or task manager. A system that makes you accountable for your life — and helps you become the person you have always wanted to be.</p>
+    <div class="features-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">🔐</div>
+        <div class="feat-title">Privacy-first architecture</div>
+        <p class="feat-desc">In the free tier, your data never leaves your device. No server receives it — not because we promise privacy, but because the architecture enforces it. Cloud sync in Pro is opt-in, encrypted, and exists only for your convenience across devices.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-1">
+        <div class="feat-icon">📡</div>
+        <div class="feat-title">Genuinely offline capable</div>
+        <p class="feat-desc">Installed as a PWA, the app lives on your device. Open it on a plane, underground, in a dead zone. Every feature works without a connection. This is not a "limited offline mode" — it is the full application, always.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-2">
+        <div class="feat-icon">🧠</div>
+        <div class="feat-title">Life coach journal</div>
+        <p class="feat-desc">Set your daily intention before the day starts. Reflect on how it actually went. An activity map shows your consistency across months — an honest mirror, not a motivational poster. No algorithm reads it unless you ask the AI coach to.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-3">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Weekly and monthly reports</div>
+        <p class="feat-desc">Completion rates, XP trends, category breakdowns. Click any day or week to see exactly what happened. Pattern recognition requires data — this gives you yours, clearly, without interpretation you didn't ask for.</p>
+      </div>
+      <div class="feat-card reveal reveal-delay-4">
+        <div class="feat-icon">⏱</div>
+        <div class="feat-title">Focus timer</div>
+        <p class="feat-desc">Countdown timers with quick break presets. Link a session to a specific goal. Speaks the completion out loud. Designed for deep work — not constant interruption, not notification creep.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🎯</div>
+        <div class="feat-title">Daily goal tracking</div>
+        <p class="feat-desc">Add daily goals by category and priority. Mark done, carry forward, reflect. XP accumulates into a rank system across 16 levels — not gamification for its own sake, but a structured record of who you are becoming over time.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHO -->
+<div class="section" id="who" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-line reveal"></div>
+    <h2 class="section-h reveal">Who this is built for</h2>
+    <p class="section-sub reveal">A specific kind of person. Not everyone. If you recognise yourself here, you already know whether this is for you.</p>
+    <div class="who-grid-5">
+      <div class="who-card reveal">
+        <div class="who-check">→</div>
+        <div class="who-text">
+          <h4>The one who has tried everything</h4>
+          <p>You have been through multiple productivity systems. Each one started strong. Most added complexity faster than they added clarity. You are not looking for another feature set — you are looking for something that actually sticks because it respects your intelligence and gets out of your way.</p>
+        </div>
+      </div>
+      <div class="who-card reveal reveal-delay-1">
+        <div class="who-check">→</div>
+        <div class="who-text">
+          <h4>The one with sensitive goals</h4>
+          <p>Career moves, financial decisions, health targets, personal milestones. These are not the kind of goals you want stored on a company's server, analysed by an algorithm, or used to serve you ads. Your most important intentions deserve a private space.</p>
+        </div>
+      </div>
+      <div class="who-card reveal reveal-delay-2">
+        <div class="who-check">→</div>
+        <div class="who-text">
+          <h4>The frequently offline</h4>
+          <p>Flights, hospital waiting rooms, remote work sites, unreliable commutes. Your focus tool should work wherever you do. Most cloud-first apps fail silently when the connection drops. This one does not — because it was designed offline-first from day one.</p>
+        </div>
+      </div>
+      <div class="who-card reveal reveal-delay-3">
+        <div class="who-check">→</div>
+        <div class="who-text">
+          <h4>The long-term thinker</h4>
+          <p>Not here for a 30-day challenge. Looking for something you can open two years from now and still find your history intact — your streaks, your growth, your evolution visible in one place. A tool built to last as long as you commit to it.</p>
+        </div>
+      </div>
+      <div class="who-card reveal reveal-delay-4">
+        <div class="who-check">→</div>
+        <div class="who-text">
+          <h4>The one who wants a real AI coach</h4>
+          <p>Personal coaching is expensive, rare, and often unavailable when you need it most. The AI coach in Max tier is not a motivational chatbot. It reads your actual patterns — your completion data, your carry-forwards, your category imbalances — and tells you the honest truth about what is working and what is not. The kind of clarity a good coach charges thousands for.</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- end wrap -->
+</div>
+
+<!-- PRICING -->
+<div class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-line reveal"></div>
+    <h2 class="section-h reveal">Simple, honest pricing</h2>
+    <p class="section-sub reveal">Start free. No card required. Upgrade when the app has earned it — not before.</p>
+
+    <!-- Unified pricing table: tier cards + comparison in one structure -->
+    <div class="compare-wrap reveal">
+      <table class="compare-table">
+        <colgroup>
+          <col class="col-feat">
+          <col class="col-free">
+          <col class="col-pro">
+          <col class="col-maxx">
+        </colgroup>
+        <!-- Tier card row — price stacked directly above its column -->
+        <thead>
+          <tr class="tier-card-row">
+            <td class="feat-col-header"></td>
+            <td class="tier-cell">
+              <div class="tier-name">FREE</div>
+              <div class="tier-price">₹0</div><div class="tier-sub-period">always</div>
+              <div class="tier-period">NO card or trial or hidden limit.</div>
+              <a href="app.html" class="tier-btn tier-btn-free">Launch for free</a>
+            </td>
+            <td class="tier-cell tier-cell-pro">
+              <div class="tier-name" style="color:var(--accent)">PRO</div>
+              <div class="tier-price">₹349</div><div class="tier-sub-period">per year</div>
+              <div class="tier-period">$3.99 USD · €3.99 EUR</div>
+              <a href="app.html" class="tier-btn tier-btn-pro">Start 10-day free trial</a>
+            </td>
+            <td class="tier-cell tier-cell-max">
+              <div class="tier-name" style="color:var(--purple)">MAX</div>
+              <div class="tier-price">₹699</div><div class="tier-sub-period">per year</div>
+              <div class="tier-period">$8.99 USD · €8.99 EUR</div>
+              <a href="app.html" class="tier-btn tier-btn-max">Start 10-day free trial</a>
+            </td>
+          </tr>
+          <!-- Column labels row -->
+          <tr class="col-label-row">
+            <th class="feat-col">Feature</th>
+            <th class="col-tier-free">Free</th>
+            <th class="col-tier-pro">Pro</th>
+            <th class="col-tier-max">Max</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="4">Goal management</td></tr>
+          <tr><td>Add and complete daily goals</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Delete goals</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Edit goals</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Carry forward unfinished goals</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Focus and tracking</td></tr>
+          <tr><td>Focus timers </td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Quick break timers</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Streak tracking</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>16-level rank progression</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Life coach journal</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Reports and insights</td></tr>
+          <tr><td>Progress charts</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Weekly reports</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Monthly reports</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Storage and sync</td></tr>
+          <tr><td>Local storage — no expiry</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Full offline capability</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Cloud backup</td><td><span class="cross">–</span></td><td><span class="tick-note">✓ Full history, always backed up</span></td><td><span class="tick-note tick-note-max">✓ Permanent cloud archive</span></td></tr>
+          <tr><td>Sync across devices</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Export data — PDF and CSV</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">AI coach</td></tr>
+          <tr><td>Weekly pattern analysis</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Goal failure insights</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Category rebalancing suggestions</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
+
+          <tr class="section-row"><td colspan="4">Support</td></tr>
+          <tr><td>Community support</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Priority support</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="section" id="feedback" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="feedback-box reveal">
+      <div class="feedback-copy">
+        <div class="section-line"></div>
+        <h2>Tell us what is actually missing</h2>
+        <p>This app is built based on what real users say — not assumptions. If you used it for a week and something felt off, or something was genuinely missing, please share the feedback. One message changes the roadmap.</p>
+        <a href="https://forms.gle/h9PCqkeepzwbXm4B9" target="_blank" class="btn-primary" style="width:fit-content;margin-top:.5rem">Open feedback form</a>
+      </div>
+      <div class="feedback-form">
+        <input type="text" placeholder="Your name (optional)">
+        <input type="email" placeholder="Email — if you want a reply">
+        <textarea placeholder="What is the one thing missing?"></textarea>
+        <button class="btn-primary" style="width:100%;justify-content:center" onclick="handleFeedback(event)">Send feedback</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="section" id="faq" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-line reveal"></div>
+    <h2 class="section-h reveal">Frequently asked</h2>
+    <p class="section-sub reveal">Everything you would want to know before deciding.</p>
+    <div class="faq-grid reveal">
+
+      <!-- Column 1 -->
+      <div class="faq-col">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What exactly is Personal Goal Tracker?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>A self-accountability system — not a to-do list, not a habit streak app, not a task manager. It is a structured daily tool that tracks your goals, reflects your patterns, and helps you understand why you are or are not becoming the person you intend to be.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Does it really work without internet?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Yes — completely. After your first visit, the service worker installs the full app on your device. Every feature works offline: goal tracking, focus timer, journal, reports. Not a limited mode. The full application, always.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need to create an account to use it?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>No account is required for the free tier. An account is only needed for Pro and Max tiers, where cloud sync across devices requires knowing who you are. The account exists for your ownership — not for our data collection.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Where is my data stored in the free tier?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Entirely in your browser's local storage. Nothing is sent to any server. This is not a privacy policy promise — it is a technical fact. There is no server to send your data to in the free tier.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What happens to my data if I clear my browser?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Free tier data lives in your browser. Clearing site data will remove it. This is why cloud backup exists in Pro and Max — your history syncs to a secure server and survives any device or browser change. If you are using the free tier, export your data periodically.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can I install it on my phone like an app?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Yes. It is a Progressive Web App (PWA). On Android, Chrome will prompt you to install it. On iOS, open it in Safari, tap Share, then Add to Home Screen. It appears on your home screen and behaves like a native app — no app store required.</p></div>
+        </div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="faq-col">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What does the AI coach actually do?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>It analyses your real usage data — completion rates by category, days you consistently miss, patterns in carry-forwards — and gives you specific, honest insights. Not generic motivation. For example: "You complete 91% of goals on days with 4 or fewer tasks. On days with 6+, it drops to 38%." That changes how you plan.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What is the difference between Pro and Max?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Pro gives you everything you need to track, reflect, and report on your goals with cloud backup. Max adds the AI coach — weekly pattern analysis, goal failure insights, and category rebalancing suggestions — plus a permanent cloud archive and priority support.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What happens if I cancel my subscription?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Nothing disappears. Your goals, streaks, and history remain in your browser's local storage exactly as they were. You lose access to cloud sync and reports. Your data is never held hostage by your subscription status.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Is the 10-day trial genuinely free?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Yes. No card required. No automatic charge at the end. You try the full Pro or Max experience for 10 days. If it has earned your money by then, you pay. If not, you drop to the free tier automatically. No dark patterns.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can I export my data?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Yes, on Pro and Max tiers. Full history export as PDF and CSV at any time. Your data is yours — readable, portable, and never locked in a proprietary format.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How does community support work?<span class="faq-arrow">▾</span></button>
+          <div class="faq-a"><p>Community support runs on GitHub Discussions — an open forum where users ask questions, share tips, and help each other. You can search existing threads, post a question, or answer one. The developer monitors it actively. Feature requests backed by community votes directly influence the roadmap.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SHARE + FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <!-- Left: brand + copyright -->
+    <div class="footer-brand">
+      <div class="nav-mark" style="width:26px;height:26px;font-size:10px;flex-shrink:0">GT</div>
+      <div>
+        <div class="footer-name">Personal Goal Tracker</div>
+        <div class="footer-copy">© 2026 · Built for people, not algorithms</div>
+      </div>
+    </div>
+    <!-- Center: Contact + Community -->
+    <div class="footer-center">
+      <a href="mailto:livsahaj@gmail.com" class="footer-center-link">Contact us</a>
+      <span class="footer-center-sep">|</span>
+      <a href="https://github.com/sainadhreddy07/Goal-Tracker/discussions" target="_blank" rel="noopener" class="footer-center-link">Community support</a>
+    </div>
+    <!-- Right: share -->
+    <div class="footer-share">
+      <span class="footer-share-label">Share</span>
+      <a class="share-btn" href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+offline-first+accountability+system.+No+account+needed.+sainadhreddy07.github.io/Goal-Tracker/" target="_blank" rel="noopener" title="Share on X">𝕏</a>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://sainadhreddy07.github.io/Goal-Tracker/" target="_blank" rel="noopener" title="Share on LinkedIn">in</a>
+      <a class="share-btn" href="https://www.reddit.com/submit?url=https://sainadhreddy07.github.io/Goal-Tracker/&title=Personal+Goal+Tracker+%E2%80%94+offline+accountability+system%2C+no+account+needed" target="_blank" rel="noopener" title="Share on Reddit">r/</a>
+      <button class="share-btn" id="copyBtn" onclick="copyLink()" title="Copy link">⎘</button>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+'use strict';
+
+// ── THEME ──────────────────────────────────────────
+var theme=localStorage.getItem('lp-theme')||'dark';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',theme);
+  var btn=document.getElementById('themeBtn');
+  if(btn)btn.textContent=theme==='dark'?'🌙':'☀️';
+}
+function toggleTheme(){
+  theme=theme==='dark'?'light':'dark';
+  localStorage.setItem('lp-theme',theme);
+  applyTheme();
+  if(window._particleColor)window._particleColor();
+}
+window.toggleTheme=toggleTheme;
+applyTheme();
+
+// ── CLOCK ──────────────────────────────────────────
+function tick(){
+  var now=new Date();
+  var t=[now.getHours(),now.getMinutes(),now.getSeconds()]
+    .map(function(x){return String(x).padStart(2,'0');}).join(':');
+  var a=document.getElementById('heroClock');
+  var b=document.getElementById('demoClock');
+  if(a)a.textContent=t;
+  if(b)b.textContent=t;
+}
+tick();
+setInterval(tick,1000);
+
+// ── ALL DOM-DEPENDENT CODE AFTER DOM READY ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',function(){
+
+  // ── DEMO ANIMATION ────────────────────────────────
+  var demoState={done:0,xp:0,total:80};
+  var taskEls=[
+    {el:document.getElementById('dt0'),xp:20},
+    {el:document.getElementById('dt1'),xp:20},
+    {el:document.getElementById('dt2'),xp:20},
+    {el:document.getElementById('dt3'),xp:20}
+  ];
+  function checkTask(i){
+    var item=taskEls[i];
+    if(!item||!item.el)return;
+    item.el.classList.add('done');
+    var chk=item.el.querySelector('.task-check');
+    if(chk)chk.textContent='✓';
+    demoState.done++;
+    demoState.xp+=item.xp;
+    var pct=Math.round((demoState.done/taskEls.length)*100);
+    var dp=document.getElementById('demoProgress');
+    var dx=document.getElementById('demoXP');
+    var df=document.getElementById('demoFill');
+    if(dp)dp.textContent=pct+'%';
+    if(dx)dx.textContent=demoState.xp+' / '+demoState.total;
+    if(df)df.style.width=(demoState.xp/demoState.total*100)+'%';
+  }
+  function resetDemo(){
+    taskEls.forEach(function(item){
+      if(!item.el)return;
+      item.el.classList.remove('done');
+      var c=item.el.querySelector('.task-check');
+      if(c)c.textContent='';
+    });
+    demoState={done:0,xp:0,total:80};
+    var dp=document.getElementById('demoProgress');
+    var dx=document.getElementById('demoXP');
+    var df=document.getElementById('demoFill');
+    if(dp)dp.textContent='0%';
+    if(dx)dx.textContent='0 / 80';
+    if(df)df.style.width='0%';
+  }
+  function runDemo(){
+    var df=document.getElementById('demoFill');
+    if(df)df.style.width='0%';
+    [1400,2800,4200,5600].forEach(function(d,i){
+      setTimeout(function(){checkTask(i);},d);
+    });
+    setTimeout(function(){
+      setTimeout(resetDemo,2000);
+      setTimeout(runDemo,4000);
+    },7000);
+  }
+  setTimeout(runDemo,800);
+
+  // ── PARTICLE CANVAS (optional — degrades gracefully) ──────────────────────────────
+  var canvasEl=document.getElementById('canvas');
+  if(canvasEl&&canvasEl.getContext){
+    var ctx=canvasEl.getContext('2d');
+    if(ctx){
+      var particles=[];
+      var W=0,H=0;
+      function resizeCanvas(){W=canvasEl.width=window.innerWidth;H=canvasEl.height=window.innerHeight;}
+      resizeCanvas();
+      window.addEventListener('resize',resizeCanvas);
+      function makeColor(){return theme==='dark'?'rgba(91,156,246,':'rgba(37,99,235,';}
+      window._particleColor=function(){particles.forEach(function(p){p.color=makeColor();});};
+      for(var i=0;i<50;i++){
+        particles.push({
+          x:Math.random()*2000,y:Math.random()*2000,
+          vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,
+          r:Math.random()*1.5+.5,
+          color:makeColor(),
+          a:Math.random()*.4+.1
+        });
+      }
+      function drawCanvas(){
+        ctx.clearRect(0,0,W,H);
+        particles.forEach(function(p){
+          p.x+=p.vx;p.y+=p.vy;
+          if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+          if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle=p.color+p.a+')';
+          ctx.fill();
+        });
+        for(var a=0;a<particles.length;a++){
+          for(var b=a+1;b<particles.length;b++){
+            var dx=particles[a].x-particles[b].x;
+            var dy=particles[a].y-particles[b].y;
+            var dist=Math.sqrt(dx*dx+dy*dy);
+            if(dist<140){
+              ctx.beginPath();
+              ctx.moveTo(particles[a].x,particles[a].y);
+              ctx.lineTo(particles[b].x,particles[b].y);
+              ctx.strokeStyle=particles[a].color+((1-dist/140)*0.1)+')';
+              ctx.lineWidth=.6;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(drawCanvas);
+      }
+      drawCanvas();
+    }
+  }
+
+  // ── SCROLL REVEAL ──────────────────────────────────
+  if('IntersectionObserver' in window){
+    var revealObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}
+      });
+    },{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){revealObs.observe(el);});
+  } else {
+    // Fallback — just show everything
+    document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('visible');});
+  }
+
+  // ── COUNTER ANIMATION ──────────────────────────────
+  var counted=false;
+  function animateCounters(){
+    if(counted)return;counted=true;
+    document.querySelectorAll('[data-count]').forEach(function(el){
+      var target=parseInt(el.getAttribute('data-count'));
+      if(isNaN(target))return;
+      var current=0;var dur=1800;var step=16;
+      var timer=setInterval(function(){
+        current+=Math.ceil(target/(dur/step));
+        if(current>=target){current=target;clearInterval(timer);}
+        el.textContent=current+(target===100?'%':'');
+      },step);
+    });
+  }
+  if('IntersectionObserver' in window){
+    var statsBand=document.querySelector('.stats-band');
+    if(statsBand){
+      var statsObs=new IntersectionObserver(function(e){
+        if(e[0].isIntersecting){animateCounters();statsObs.disconnect();}
+      },{threshold:.3});
+      statsObs.observe(statsBand);
+    }
+  }
+
+  // ── CARD MOUSE GLOW — feat + who cards ──────────────────────────────
+  document.querySelectorAll('.feat-card,.who-card').forEach(function(card){
+    card.addEventListener('mousemove',function(e){
+      var rect=card.getBoundingClientRect();
+      card.style.setProperty('--mx',((e.clientX-rect.left)/rect.width*100)+'%');
+      card.style.setProperty('--my',((e.clientY-rect.top)/rect.height*100)+'%');
+    });
+  });
+
+  // ── FAQ ACCORDION ──────────────────────────────────
+  document.querySelectorAll('.faq-q').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var answer=this.parentElement.querySelector('.faq-a');
+      var isOpen=answer.classList.contains('open');
+      document.querySelectorAll('.faq-a').forEach(function(a){a.classList.remove('open');});
+      document.querySelectorAll('.faq-q').forEach(function(q){q.classList.remove('open');});
+      if(!isOpen){answer.classList.add('open');this.classList.add('open');}
+    });
+  });
+
+  // ── SMOOTH ANCHOR SCROLL ──────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var href=this.getAttribute('href');
+      if(href==='#')return;
+      var target=document.querySelector(href);
+      if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+    });
+  });
+
+}); // end DOMContentLoaded
+
+// ── SHARE / COPY (global) ──────────────────────────────────
+function copyLink(){
+  var url=window.location.origin+window.location.pathname;
+  var btn=document.getElementById('copyBtn');
+  if(navigator.clipboard&&btn){
+    navigator.clipboard.writeText(url).then(function(){
+      btn.textContent='✓ Copied!';btn.classList.add('copied');
+      setTimeout(function(){btn.textContent='⎘ Copy link';btn.classList.remove('copied');},2200);
+    });
+  }
+}
+window.copyLink=copyLink;
+
+// ── FEEDBACK HANDLER (global) ──────────────────────────────────
+function handleFeedback(e){
+  e.preventDefault();
+  var btn=e.target;
+  var orig=btn.textContent;
+  btn.textContent='✓ Sent — thank you';
+  btn.style.background='var(--green)';
+  setTimeout(function(){btn.textContent=orig;btn.style.background='';},3000);
+}
+window.handleFeedback=handleFeedback;
+
+})();
+</script>
+</body>
+</html>
