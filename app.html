@@ -173,7 +173,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .hdr-nav-caret{font-size:0.8rem;color:inherit;opacity:0.75;margin-left:0.15rem;font-weight:700}
 /* Locked nav buttons */
 .hdr-nav-locked{position:relative}
-
+body.tier-free .hdr-nav-btn[data-tier="pro"],
+body.tier-free .hdr-nav-btn[data-tier="max"],
+body.tier-pro  .hdr-nav-btn[data-tier="max"]{
+  opacity:0.45;
+}
+body.tier-free .hdr-nav-btn[data-tier="pro"]::after,
+body.tier-free .hdr-nav-btn[data-tier="max"]::after,
+body.tier-pro  .hdr-nav-btn[data-tier="max"]::after{
+  content:' 🔒';font-size:0.6rem;
+}
 /* Reports dropdown */
 .hdr-nav-drop-wrap{position:relative}
 .hdr-nav-submenu{
@@ -191,14 +200,34 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   transition:background var(--tr);
 }
 .hdr-nav-sub-item:hover{background:var(--bg3);color:var(--text)}
-
+body.tier-free .hdr-nav-sub-item[data-tier="pro"]::after,
+body.tier-pro  .hdr-nav-sub-item[data-tier="max"]::after{content:' 🔒';font-size:0.6rem}
 /* Hide nav on mobile — hamburger handles it (override lives at end of stylesheet — see NAV/HAMBURGER BREAKPOINT FIX) */
 
 /* ── LOCKED TABS ── */
 /* Body class drives all lock state — CSS-only, no per-tab JS needed */
-
+body.tier-free .tab-i[data-tier="pro"],
+body.tier-free .tab-i[data-tier="max"],
+body.tier-pro  .tab-i[data-tier="max"]{
+  opacity:0.42;
+  cursor:pointer; /* still tappable — fires upgrade modal */
+}
+body.tier-free .tab-i[data-tier="pro"] .tab-lbl::after,
+body.tier-free .tab-i[data-tier="max"] .tab-lbl::after,
+body.tier-pro  .tab-i[data-tier="max"] .tab-lbl::after{
+  content:' 🔒';font-size:0.6rem;vertical-align:middle;
+}
 /* Dropdown mirrors lock state */
-
+body.tier-free .nav-dd-item[data-tier="pro"],
+body.tier-free .nav-dd-item[data-tier="max"],
+body.tier-pro  .nav-dd-item[data-tier="max"]{
+  opacity:0.42;
+}
+body.tier-free .nav-dd-item[data-tier="pro"] .lock-badge::before,
+body.tier-free .nav-dd-item[data-tier="max"] .lock-badge::before,
+body.tier-pro  .nav-dd-item[data-tier="max"] .lock-badge::before{
+  content:'🔒';
+}
 
 /* ── HAMBURGER (mobile/tablet) ── */
 .hbg-btn{
@@ -252,7 +281,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .hbg-tab.on{background:var(--bg3);border-left-color:var(--accent);color:var(--text)}
 .hbg-tab .hbg-ico{font-size:16px;width:22px;text-align:center;flex-shrink:0}
 /* Locked state in drawer */
-
+body.tier-free .hbg-tab[data-tier="pro"],
+body.tier-free .hbg-tab[data-tier="max"],
+body.tier-pro  .hbg-tab[data-tier="max"]{opacity:0.42}
+body.tier-free .hbg-tab[data-tier="pro"] .hbg-lbl::after,
+body.tier-free .hbg-tab[data-tier="max"] .hbg-lbl::after,
+body.tier-pro  .hbg-tab[data-tier="max"] .hbg-lbl::after{content:' 🔒';font-size:0.65rem}
 .hbg-foot{padding:0.65rem 1rem;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:0.45rem}
 .hbg-foot-row{display:flex;gap:0.4rem}
 
@@ -350,6 +384,41 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .btn-d{border-color:var(--red2);color:var(--red)}
 .btn-d:hover{background:var(--red2)}
 .btn-g{background:transparent;border-color:transparent;color:var(--text2)}
+/* ── ACCOUNT PANEL — redesigned sections ── */
+.acc-sec{margin-bottom:1.4rem}
+.acc-sec-hd{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.75rem}
+.acc-sec-ico{font-size:0.95rem}
+.acc-sec-title{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.acc-profile-row{display:flex;align-items:center;gap:0.75rem;padding:0.8rem;background:var(--bg3);border-radius:var(--rsm);margin-bottom:0.5rem}
+.acc-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.acc-profile-info{min-width:0;flex:1}
+.acc-profile-name{font-size:0.88rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-profile-email{font-size:0.72rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc-profile-meta{font-size:0.68rem;color:var(--text3);margin-top:0.5rem;padding-left:0.2rem}
+.acc-plan-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:0.9rem 1rem;margin-bottom:0.7rem}
+.acc-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem}
+.acc-plan-row:last-child{margin-bottom:0}
+.acc-plan-label{font-size:0.74rem;color:var(--text2)}
+.acc-plan-val{font-size:0.82rem;font-weight:600;color:var(--text)}
+.acc-plan-badge{display:inline-flex;align-items:center;gap:0.3rem;background:var(--accent2);color:var(--accent);padding:0.15rem 0.55rem;border-radius:20px;font-size:0.72rem;font-weight:700}
+.acc-plan-badge-free{background:var(--bg4);color:var(--text2)}
+.acc-upsell{font-size:0.74rem;color:var(--text2);line-height:1.55;background:var(--accent2);border-radius:var(--rsm);padding:0.65rem 0.8rem;margin-bottom:0.7rem}
+[data-theme="dark"] .acc-upsell{color:var(--text)}
+.acc-upsell a{color:var(--accent);font-weight:700;text-decoration:none}
+.acc-upsell a:hover{text-decoration:underline}
+[data-theme="dark"] .acc-upsell a{color:#8ab4ff}
+.acc-sync-row{display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:var(--text2);margin-bottom:0.4rem;padding:0 0.1rem}
+.acc-sync-row span:last-child{font-weight:600;color:var(--text)}
+.acc-sync-note{font-size:0.68rem;color:var(--text3);line-height:1.5;margin-bottom:0.7rem;padding:0 0.1rem}
+.btn-outline-amber{background:transparent;border-color:var(--amber);color:var(--amber)}
+.btn-outline-amber:hover{background:var(--amber2)}
+.btn-outline-red{background:transparent;border-color:var(--red);color:var(--red)}
+.btn-outline-red:hover{background:var(--red2)}
+.btn-disabled-soon{background:var(--bg4);color:var(--text3);cursor:not-allowed;border-color:var(--border);position:relative}
+.soon-tag{font-size:0.6rem;font-weight:700;letter-spacing:.03em;background:var(--border2);color:var(--text2);padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.3rem}
+.acc-reset-hd{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.75rem}
+.acc-reset-title{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+
 .btn-g:hover{background:var(--bg3);border-color:var(--border)}
 .btn-ic{width:30px;height:30px;padding:0;justify-content:center;font-size:14px}
 
@@ -677,15 +746,15 @@ canvas{display:block;width:100%!important}
   <nav class="hdr-nav" id="hdrNav">
     <button class="hdr-nav-btn" onclick="toggleTab('focus',this)">Focus</button>
     <button class="hdr-nav-btn" onclick="toggleTab('coach',this)">Life Coach</button>
-    <button class="hdr-nav-btn" onclick="toggleTab('progress',this)">Progress</button>
+    <button class="hdr-nav-btn hdr-nav-locked" data-tier="pro" onclick="toggleTab('progress',this)">Progress</button>
     <!-- Reports dropdown -->
     <div class="hdr-nav-drop-wrap" id="reportsWrap">
-      <button class="hdr-nav-btn" onclick="toggleReportsMenu(event)">
+      <button class="hdr-nav-btn hdr-nav-locked" data-tier="pro" onclick="toggleReportsMenu(event)">
         Reports <span class="hdr-nav-caret">▾</span>
       </button>
       <div class="hdr-nav-submenu" id="reportsMenu">
-        <button class="hdr-nav-sub-item" onclick="toggleTab('weekly',this);closeReportsMenu()">Weekly Report</button>
-        <button class="hdr-nav-sub-item" onclick="toggleTab('monthly',this);closeReportsMenu()">Monthly Report</button>
+        <button class="hdr-nav-sub-item" data-tier="pro" onclick="toggleTab('weekly',this);closeReportsMenu()">Weekly Report</button>
+        <button class="hdr-nav-sub-item" data-tier="pro" onclick="toggleTab('monthly',this);closeReportsMenu()">Monthly Report</button>
       </div>
     </div>
     <button class="hdr-nav-btn" onclick="toggleTab('ranks',this)">About Ranks</button>
@@ -815,9 +884,9 @@ canvas{display:block;width:100%!important}
     <div class="tab-list">
       <div class="tab-i" onclick="toggleTab('focus',this)"><div class="tab-ico">🎯</div><div class="tab-lbl">Focus</div></div>
       <div class="tab-i" onclick="toggleTab('coach',this)"><div class="tab-ico">🧠</div><div class="tab-lbl">Life Coach</div></div>
-      <div class="tab-i" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
-      <div class="tab-i" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
-      <div class="tab-i" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
+      <div class="tab-i" data-tier="pro" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
       <div class="tab-i" onclick="toggleTab('ranks',this)"><div class="tab-ico">🎖</div><div class="tab-lbl">About Ranks</div></div>
     </div>
     <div class="sb-foot">
@@ -843,8 +912,8 @@ canvas{display:block;width:100%!important}
 <!-- ── APP FOOTER ── -->
 <footer class="app-footer">
   <div class="app-footer-left">
-    <div class="app-footer-logo">LV</div>
-    <span style="font-weight:600;color:var(--text2)">LivSahaj</span>
+    <div class="app-footer-logo">PG</div>
+    <span style="font-weight:600;color:var(--text2)">Goal Tracker</span>
     <span class="app-footer-sep">·</span>
     <span>© 2026</span>
   </div>
@@ -894,14 +963,14 @@ canvas{display:block;width:100%!important}
   <div class="hbg-tabs">
     <div class="hbg-tab" onclick="drawerTab('focus')"><div class="hbg-ico">🎯</div><span class="hbg-lbl">Focus</span></div>
     <div class="hbg-tab" onclick="drawerTab('coach')"><div class="hbg-ico">🧠</div><span class="hbg-lbl">Life Coach</span></div>
-    <div class="hbg-tab" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
+    <div class="hbg-tab" data-tier="pro" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
     <div class="hbg-tab" onclick="toggleDrawerReports(event)" style="justify-content:space-between">
       <span style="display:flex;align-items:center;gap:0.65rem"><span class="hbg-ico">📊</span><span class="hbg-lbl">Reports</span></span>
       <span id="drawerReportsCaret" style="font-size:0.7rem;color:var(--text3);transition:transform .2s ease">▾</span>
     </div>
     <div id="drawerReportsSub" style="display:none">
-      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
-      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
+      <div class="hbg-tab" data-tier="pro" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
+      <div class="hbg-tab" data-tier="pro" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
     </div>
     <div class="hbg-tab" onclick="drawerTab('ranks')"><div class="hbg-ico">🎖</div><span class="hbg-lbl">About Ranks</span></div>
     <div class="hbg-tab" onclick="drawerTab('account')"><div class="hbg-ico">👤</div><span class="hbg-lbl">Account</span></div>
@@ -982,6 +1051,19 @@ canvas{display:block;width:100%!important}
 </div>
 
 <!-- Install banner (shown when PWA installable) -->
+<!-- Upgrade prompt modal -->
+<div id="upgradeModal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeUpgrade()">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.75rem;max-width:340px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+    <div style="font-size:2rem;margin-bottom:0.75rem" id="upgIcon">🔒</div>
+    <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem" id="upgTitle">Pro feature</div>
+    <div style="font-size:0.85rem;color:var(--text2);line-height:1.65;margin-bottom:1.25rem" id="upgMsg">Upgrade to Pro or Max to unlock this feature.</div>
+    <div style="display:flex;gap:0.5rem;justify-content:center">
+      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank" class="btn btn-sm btn-p" style="text-decoration:none;padding:0.5rem 1rem;font-size:0.82rem">See plans</a>
+      <button class="btn btn-sm btn-g" onclick="closeUpgrade()" style="font-size:0.82rem">Maybe later</button>
+    </div>
+  </div>
+</div>
+
 <div id="installBanner" style="display:none;position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:0.65rem 1rem;align-items:center;gap:0.75rem;z-index:990;box-shadow:0 4px 24px rgba(0,0,0,.3);font-size:0.82rem;white-space:nowrap">
   <span>📲 Install Goal Tracker as an app</span>
   <button class="btn btn-sm btn-p" onclick="window._triggerInstall()">Install</button>
@@ -1041,9 +1123,12 @@ async function refreshAuthState(){
     const {data:{session}}=await sb.auth.getSession();
     if(session&&session.user){
       currentUser=session.user;
-      let {data:profile}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+      let {data:profile,error:selectErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+      if(selectErr)console.warn('[Account] Profile fetch error:',selectErr.message);
       if(!profile){
-        const {data:newProfile}=await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,tier:'free'}).select().single();
+        const meta=currentUser.user_metadata||{};
+        const {data:newProfile,error:insertErr}=await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,tier:'free',first_name:meta.first_name||null,last_name:meta.last_name||null}).select().single();
+        if(insertErr)console.warn('[Account] Profile creation failed — likely a missing INSERT policy on the profiles table in Supabase:',insertErr.message);
         profile=newProfile;
       }
       currentProfile=profile;
@@ -1069,25 +1154,65 @@ function buildAccount(){
   let html='<div style="padding:0.25rem 0 1rem">';
 
   if(currentUser&&currentProfile){
-    const memberSince=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
-    const tierLabel=(currentProfile.tier||'free').charAt(0).toUpperCase()+(currentProfile.tier||'free').slice(1);
+    const joinedOn=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
+    const tier=currentProfile.tier||'free';
+    const tierLabel=tier.charAt(0).toUpperCase()+tier.slice(1);
+    const hasName=currentProfile.first_name&&currentProfile.last_name;
+    const initials=hasName?(currentProfile.first_name[0]+currentProfile.last_name[0]).toUpperCase():(currentUser.email||'?').slice(0,2).toUpperCase();
+    const displayName=hasName?`${currentProfile.first_name} ${currentProfile.last_name}`:currentUser.email.split('@')[0];
+    const renewsOn=currentProfile.renews_at?new Date(currentProfile.renews_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):null;
+
+    let upsellHtml='';
+    if(tier==='free'){
+      upsellHtml=`<div class="acc-upsell">You're on the Free tier. Upgrade to <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Pro</a> or <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Max</a> to unlock the perks.</div>`;
+    }else if(tier==='pro'){
+      upsellHtml=`<div class="acc-upsell">You're on the Pro tier. Upgrade to <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Max</a> to use Max perks.</div>`;
+    }
+
     html+=`
-      <div class="sec-lbl" style="margin-bottom:0.6rem">Profile</div>
-      <div class="ins-grid" style="margin-bottom:1rem">
-        <div class="ins-card" style="grid-column:1/-1"><div class="ins-lbl">Email</div><div class="ins-val" style="font-size:0.85rem;word-break:break-all">${currentUser.email}</div></div>
-        <div class="ins-card"><div class="ins-lbl">Member since</div><div class="ins-val" style="font-size:0.85rem">${memberSince}</div></div>
-        <div class="ins-card"><div class="ins-lbl">Current plan</div><div class="ins-val" style="font-size:0.85rem;color:var(--accent)">${tierLabel}</div></div>
+      <div class="acc-sec">
+        <div class="acc-sec-hd"><span class="acc-sec-ico">👤</span><span class="acc-sec-title">Profile</span></div>
+        <div class="acc-profile-row">
+          <div class="acc-avatar">${initials}</div>
+          <div class="acc-profile-info">
+            <div class="acc-profile-name">${displayName}</div>
+            <div class="acc-profile-email">${currentUser.email}</div>
+          </div>
+        </div>
+        <div class="acc-profile-meta">Joined on ${joinedOn}</div>
       </div>
-      ${currentProfile.tier==='free'?'<a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank" class="btn btn-sm btn-p" style="width:100%;justify-content:center;margin-bottom:0.5rem">Upgrade plan</a>':''}
-      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:1rem">Last synced: cloud sync not yet available — coming soon</div>
-      <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="signOutUser()">Sign out</button>
-      ${currentProfile.tier!=='free'?'<button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--text3);color:var(--text3)" onclick="alert(\'Contact support to cancel — this will be self-serve soon.\')">Cancel membership</button>':''}
+
+      <div class="acc-sec">
+        <div class="acc-sec-hd"><span class="acc-sec-ico">💳</span><span class="acc-sec-title">Plan details</span></div>
+        <div class="acc-plan-card">
+          <div class="acc-plan-row">
+            <span class="acc-plan-label">Current plan</span>
+            <span class="acc-plan-badge${tier==='free'?' acc-plan-badge-free':''}">${tierLabel}</span>
+          </div>
+          ${renewsOn?`<div class="acc-plan-row"><span class="acc-plan-label">Renews on</span><span class="acc-plan-val">${renewsOn}</span></div>`:''}
+        </div>
+        ${upsellHtml}
+        ${tier!=='max'?'<button class="btn btn-sm btn-p" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="window.open(\'https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing\',\'_blank\')">Upgrade plan</button>':''}
+        ${tier!=='free'?'<button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center" onclick="alert(\'Contact support to cancel — this will be self-serve soon.\')">End membership</button>':''}
+      </div>
+
+      <div class="acc-sec">
+        <div class="acc-sec-hd"><span class="acc-sec-ico">🗄️</span><span class="acc-sec-title">Account data</span></div>
+        <div class="acc-sync-row"><span>Last synced</span><span>Never</span></div>
+        <div class="acc-sync-note">Cloud sync isn't available yet. Once live, this will show a real date and time — e.g., 3 Sept 2026, 2:45 PM.</div>
+        <button class="btn btn-sm btn-disabled-soon" style="width:100%;justify-content:center;margin-bottom:0.5rem" disabled>Sync data <span class="soon-tag">SOON</span></button>
+        <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;border:1px solid var(--border2)" onclick="signOutUser()">Sign out</button>
+      </div>
+
     `;
   }else if(authMode==='newpassword'){
     html+=`
       <div class="sec-lbl" style="margin-bottom:0.5rem">Set a new password</div>
       <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">You followed a reset link — choose a new password below.</div>
-      <input type="password" id="authNewPassword" placeholder="New password (min 6 characters)" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <div style="position:relative;margin-bottom:0.5rem">
+        <input type="password" id="authNewPassword" placeholder="New password (min 6 characters)" onkeydown="if(event.key==='Enter')submitNewPassword()" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <button type="button" onclick="togglePwVisibility('authNewPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
+      </div>
       <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="submitNewPassword()" id="newPasswordBtn">Set new password</button>
       <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
     `;
@@ -1095,7 +1220,7 @@ function buildAccount(){
     html+=`
       <div class="sec-lbl" style="margin-bottom:0.5rem">Reset your password</div>
       <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">We'll email you a link to set a new password.</div>
-      <input type="email" id="authEmail" placeholder="you@example.com" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')requestPasswordReset()" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
       <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="requestPasswordReset()" id="resetReqBtn">Send reset link</button>
       <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
       <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode('signin')">← Back to sign in</button>
@@ -1109,8 +1234,15 @@ function buildAccount(){
         <button class="btn btn-sm ${isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signup')">Sign Up</button>
       </div>
       <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — free tier included.</div>
-      <input type="email" id="authEmail" placeholder="you@example.com" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
-      <input type="password" id="authPassword" placeholder="Password (min 6 characters)" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      ${isSignup?`<div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
+        <input type="text" id="authFirstName" placeholder="First name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <input type="text" id="authLastName" placeholder="Last name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+      </div>`:''}
+      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <div style="position:relative;margin-bottom:0.5rem">
+        <input type="password" id="authPassword" placeholder="Password (min 6 characters)" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <button type="button" onclick="togglePwVisibility('authPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
+      </div>
       <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="${isSignup?'signUpWithPassword()':'signInWithPassword()'}" id="authSubmitBtn">${isSignup?'Create account':'Sign in'}</button>
       ${!isSignup?'<button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode(\'forgot\')">Forgot password?</button>':''}
       <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
@@ -1119,9 +1251,9 @@ function buildAccount(){
 
   html+=`
     <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
-    <div style="font-size:0.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:0.6rem">Danger zone</div>
-    <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--amber);color:var(--amber);margin-bottom:0.5rem" onclick="confirmResetStreak()">Reset Streak</button>
-    <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--red);color:var(--red)" onclick="confirmResetData()">Reset All Data</button>
+    <div class="acc-reset-hd"><span class="acc-sec-ico">⚠️</span><span class="acc-reset-title">Reset</span></div>
+    <button class="btn btn-sm btn-outline-amber" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="confirmResetStreak()">Reset Streak</button>
+    <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center" onclick="confirmResetData()">Reset All Data</button>
     <div style="font-size:0.7rem;color:var(--text3);margin-top:0.6rem;line-height:1.5">These act on this device's local data regardless of sign-in status. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
   </div>`;
 
@@ -1151,15 +1283,21 @@ function signInWithPassword(){
   });
 }
 function signUpWithPassword(){
+  const firstNameEl=document.getElementById('authFirstName');
+  const lastNameEl=document.getElementById('authLastName');
+  const firstName=(firstNameEl&&firstNameEl.value||'').trim();
+  const lastName=(lastNameEl&&lastNameEl.value||'').trim();
   const email=(document.getElementById('authEmail').value||'').trim();
   const password=document.getElementById('authPassword').value||'';
   const msgEl=document.getElementById('authMsg');
   const btn=document.getElementById('authSubmitBtn');
+  if(!firstName){msgEl.textContent='Enter your first name.';msgEl.style.color='var(--red)';return;}
+  if(!lastName){msgEl.textContent='Enter your last name.';msgEl.style.color='var(--red)';return;}
   if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
   if(!password||password.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
   if(!sb){msgEl.textContent='Sign-up unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
   btn.disabled=true;btn.textContent='Creating account...';msgEl.textContent='';
-  sb.auth.signUp({email:email,password:password}).then(function(result){
+  sb.auth.signUp({email:email,password:password,options:{data:{first_name:firstName,last_name:lastName}}}).then(function(result){
     btn.disabled=false;btn.textContent='Create account';
     if(result.error){
       msgEl.textContent=result.error.message;
@@ -1221,6 +1359,12 @@ function submitNewPassword(){
     msgEl.style.color='var(--red)';
   });
 }
+function togglePwVisibility(inputId,btn){
+  const input=document.getElementById(inputId);
+  if(!input)return;
+  if(input.type==='password'){input.type='text';btn.textContent='🙈';}
+  else{input.type='password';btn.textContent='👁';}
+}
 function signOutUser(){
   if(!sb)return;
   sb.auth.signOut().then(function(){
@@ -1258,7 +1402,7 @@ const TODAY=()=>new Date().toISOString().slice(0,10);
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'light',openTab:null,fpWidth:480};
+let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'light',openTab:null,fpWidth:480,tier:'free'};
 let timerIv=null;
 const CH={};
 // Disable Chart.js animations globally — prevents rubber-band on first open
@@ -1279,6 +1423,8 @@ function toggleReportsMenu(e){
   e.stopPropagation();
   const menu=document.getElementById('reportsMenu');
   if(!menu)return;
+  // Gate check first
+  if(!requireTier('pro'))return;
   menu.classList.toggle('open');
 }
 function closeReportsMenu(){
@@ -1345,13 +1491,8 @@ function toggleDrawerReports(e){
 }
 function drawerTab(id){
   closeDrawer();
-  // Small delay so drawer closes visually before panel opens
-  setTimeout(function(){
-    const tabs=document.querySelectorAll('.tab-i');
-    let found=null;
-    tabs.forEach(function(t){if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))found=t;});
-    if(found)found.click();
-  },120);
+  // Directly opens the panel — no longer depends on a hidden legacy element existing
+  setTimeout(function(){toggleTab(id);},120);
 }
 // Also show install in drawer when prompt fires
 window.addEventListener('beforeinstallprompt',function(){
@@ -1360,6 +1501,11 @@ window.addEventListener('beforeinstallprompt',function(){
 },true);
 
 // ── TIER BODY CLASS — drives all CSS lock states ──────────────────────────────────────────
+function applyTierClass(){
+  document.body.classList.remove('tier-free','tier-pro','tier-max');
+  document.body.classList.add('tier-'+(S.tier||'free'));
+}
+
 // ── FOOTER COPY LINK ──────────────────────────────────────────
 function copyAppLink(){
   var url=window.location.href;
@@ -1380,6 +1526,41 @@ function copyAppLink(){
 function openShare(){const m=document.getElementById('shareModal');if(m)m.style.display='flex';}
 function closeShare(){const m=document.getElementById('shareModal');if(m)m.style.display='none';}
 
+
+// Tier hierarchy: free < pro < max
+const TIER_RANK={free:0,pro:1,max:2};
+const TIER_FEATURES={
+  // pro features
+  progress:'pro', weekly:'pro', monthly:'pro',
+  // max features
+  coach_ai:'max'
+};
+function requireTier(needed){
+  const have=TIER_RANK[S.tier||'free']||0;
+  const need=TIER_RANK[needed]||0;
+  if(have>=need)return true;
+  showUpgrade(needed);return false;
+}
+function showUpgrade(needed){
+  const m=document.getElementById('upgradeModal');
+  const ti=document.getElementById('upgTitle');
+  const ms=document.getElementById('upgMsg');
+  const ic=document.getElementById('upgIcon');
+  if(!m)return;
+  if(needed==='max'){
+    if(ic)ic.textContent='⭐';
+    if(ti)ti.textContent='Max tier feature';
+    if(ms)ms.textContent='Upgrade to Max to unlock the AI coach, permanent cloud archive, and priority support.';
+  } else {
+    if(ic)ic.textContent='🔒';
+    if(ti)ti.textContent='Pro feature';
+    if(ms)ms.textContent='Upgrade to Pro or Max to unlock progress charts, weekly reports, monthly reports, and cloud sync.';
+  }
+  m.style.display='flex';
+}
+function closeUpgrade(){const m=document.getElementById('upgradeModal');if(m)m.style.display='none';}
+// Dev helper — cycle tier for testing (remove before production)
+window._setTier=function(t){S.tier=t;save();applyTierClass();toast('Tier set to: '+t);updateStats();};
 
 // ═══════════════════════════════════════════
 // THEME
@@ -1476,6 +1657,8 @@ function updateFooter(){
 // ═══════════════════════════════════════════
 function toggleTab(id,el){
   if(S.openTab===id){closePanel();return;}
+  // Feature gate — check tier before opening
+  if((id==='progress'||id==='weekly'||id==='monthly')&&!requireTier('pro'))return;
   S.openTab=id;
   document.querySelectorAll('.tab-i').forEach(t=>t.classList.remove('on'));
   if(el)el.classList.add('on');
@@ -1963,7 +2146,6 @@ function toggleMthWk(card){
   if(arr)arr.textContent=open?'▴':'▾';
 }
 function toggleRevealList(tileEl,idx){
-  // Find the detail container that holds both the tile and the reveal lists
   const container=tileEl.closest('div[style*="border-top"]');
   if(!container)return;
   const lists=container.querySelectorAll('.reveal-list');
@@ -2108,6 +2290,8 @@ function exportMonthlyCSV(){
 // MODAL
 // ═══════════════════════════════════════════
 function openModal(editId){
+  // Editing existing goals is a Pro feature
+  if(editId&&!requireTier('pro'))return;
   S.editId=editId||null;
   document.getElementById('addModal').classList.add('on');
   document.getElementById('mTitle').textContent=editId?'Edit mission':'New mission';
@@ -2626,6 +2810,7 @@ function init(){
   }
   load();
   applyTheme();
+  applyTierClass();
   updateDate();
   updateStreak();
   updateCatFilter();
