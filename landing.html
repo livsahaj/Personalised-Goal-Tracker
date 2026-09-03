@@ -460,6 +460,12 @@ h1 .line2{
 }
 .share-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
 .share-btn.copied{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.share-btn[title="Share on LinkedIn"]{background:#0A66C2;color:#fff;border-color:#0A66C2}
+.share-btn[title="Share on LinkedIn"]:hover{background:#004182;border-color:#004182;color:#fff}
+.share-btn[title="Share on Reddit"]{background:#FF4500;color:#fff;border-color:#FF4500}
+.share-btn[title="Share on Reddit"]:hover{background:#cc3700;border-color:#cc3700;color:#fff}
+.share-btn[title="Share on X"]{background:#000;color:#fff;border-color:#000}
+.share-btn[title="Share on X"]:hover{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
 
 /* ─── PRICING ─────────────────────────────── */
 /* Unified table: tier cards + feature comparison in one structure */
@@ -468,7 +474,7 @@ h1 .line2{
 
 /* Feature column — 30% wide, tier columns share remaining 70% equally */
 .col-feat{width:30%}
-.col-free,.col-pro,.col-maxx{width:23.34%}
+.col-free,.col-pro,.col-maxx{width:23.33%}
 .compare-table colgroup .col-free,.compare-table colgroup .col-pro,.compare-table colgroup .col-maxx{border-left:1px solid var(--border)}
 
 /* Tier card row — price card embedded as first thead row */
@@ -919,19 +925,19 @@ footer{
           <tr class="tier-card-row">
             <td class="feat-col-header"></td>
             <td class="tier-cell">
-              <div class="tier-name">FREE TIER</div>
+              <div class="tier-name">FREE</div>
               <div class="tier-price">₹0</div><div class="tier-sub-period">always</div>
               <div class="tier-period">NO card or trial or hidden limit.</div>
               <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" class="tier-btn tier-btn-free">Start for free</a>
             </td>
             <td class="tier-cell tier-cell-pro">
-              <div class="tier-name" style="color:var(--accent)">PRO TIER</div>
+              <div class="tier-name" style="color:var(--accent)">PRO</div>
               <div class="tier-price">₹349</div><div class="tier-sub-period">per year</div>
               <div class="tier-period">$3.99 USD · €3.99 EUR</div>
               <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" class="tier-btn tier-btn-pro">Start 10-day free trial</a>
             </td>
             <td class="tier-cell tier-cell-max">
-              <div class="tier-name" style="color:var(--purple)">MAX TIER</div>
+              <div class="tier-name" style="color:var(--purple)">MAX</div>
               <div class="tier-price">₹649</div><div class="tier-sub-period">per year</div>
               <div class="tier-period">$7.99 USD · €7.99 EUR</div>
               <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" class="tier-btn tier-btn-max">Start 10-day free trial</a>
@@ -1005,7 +1011,7 @@ footer{
   <div class="wrap">
     <div class="section-line reveal"></div>
     <h2 class="section-h reveal">Frequently asked</h2>
-    <p class="section-sub reveal">Everything you would want to know before deciding. If none of the questions below answer your query, please post it in the <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">GitHub discussion forum.</p>
+    <p class="section-sub reveal">Everything you would want to know before deciding. If none of the questions below answer your query, please post it in the <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">Github discussion forum</a>.</p>
     <div class="faq-grid reveal">
 
       <!-- Column 1 -->

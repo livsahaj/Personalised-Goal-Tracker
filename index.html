@@ -267,6 +267,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 }
 .app-footer-left{display:flex;align-items:center;gap:0.45rem;min-width:0}
 .app-footer-center{display:flex;align-items:center;gap:0.6rem;white-space:nowrap}
+.app-footer-danger{color:var(--text3)!important}
+.app-footer-danger:hover{color:var(--red)!important}
 .app-footer-right{display:flex;align-items:center;justify-content:flex-end;gap:0.45rem}
 .app-footer a{color:var(--text3);text-decoration:none;transition:color var(--tr);white-space:nowrap;font-size:0.72rem}
 .app-footer a:hover{color:var(--text2)}
@@ -284,6 +286,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
   font-size:0.78rem;transition:all var(--tr);
 }
 .app-footer-share:hover{border-color:var(--accent);color:var(--accent);background:var(--accent2)}
+.app-footer-share[title="LinkedIn"]{background:#0A66C2;color:#fff;border-color:#0A66C2}
+.app-footer-share[title="LinkedIn"]:hover{background:#004182;border-color:#004182;color:#fff}
+.app-footer-share[title="Reddit"]{background:#FF4500;color:#fff;border-color:#FF4500}
+.app-footer-share[title="Reddit"]:hover{background:#cc3700;border-color:#cc3700;color:#fff}
+.app-footer-share[title="Share on X"]{background:#000;color:#fff;border-color:#000}
+.app-footer-share[title="Share on X"]:hover{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
 
 /* ── FOOTER ── */
 /* ── TIMER COMPLETE OVERLAY ── */
@@ -406,6 +414,8 @@ input[type=checkbox]{width:auto}
 .hbg-foot-links{display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:0.68rem}
 .hbg-foot-links a{color:var(--text3);text-decoration:none}
 .hbg-foot-links a:hover{color:var(--text2)}
+.hbg-danger-link{color:var(--text3)!important}
+.hbg-danger-link:hover{color:var(--red)!important}
 .hbg-foot-sep{color:var(--text3)}
 .hbg-foot-copy{text-align:center;font-size:0.62rem;color:var(--text3);margin-top:0.35rem}
 .add-trig{display:inline-flex;align-items:center;gap:0.45rem;padding:0.5rem 1.1rem;background:var(--accent);border:none;border-radius:var(--rsm);cursor:pointer;color:#fff;font-size:0.85rem;font-family:var(--font);font-weight:500;transition:all var(--tr);width:auto;flex-shrink:0}
@@ -656,12 +666,12 @@ canvas{display:block;width:100%!important}
 <header class="hdr">
   <!-- Left: brand -->
   <div class="brand">
-    <div class="brand-mark">DT</div>
-    <span class="brand-name">Day Tracker</span>
+    <div class="brand-mark">LV</div>
+    <span class="brand-name">Goal Tracker</span>
   </div>
 
   <!-- About GT — sits between brand and nav -->
-  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hdr-about-link" id="hdrAboutLink">About App</a>
+  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hdr-about-link" id="hdrAboutLink">About GT</a>
 
   <!-- Centre-left: nav buttons (desktop only) -->
   <nav class="hdr-nav" id="hdrNav">
@@ -700,6 +710,7 @@ canvas{display:block;width:100%!important}
       <span class="xp-num" id="xpTxt">0 / 0</span>
     </div>
     <button class="btn-th" onclick="toggleTheme()" title="Toggle theme"><span id="thIcon">☀️</span></button>
+    <button class="btn-th" onclick="openSettings()" title="Settings" aria-label="Settings">⚙</button>
   </div>
   <!-- Hamburger — always rightmost -->
   <button class="hbg-btn" id="hbgBtn" onclick="openDrawer()" aria-label="Open menu">☰</button>
@@ -812,7 +823,7 @@ canvas{display:block;width:100%!important}
     <div class="sb-foot">
       <!-- About + Install -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem">
-        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">About App</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
         <button class="btn btn-sm btn-g" id="sbInstallBtn" style="flex:1;font-size:0.72rem;display:none" onclick="window._triggerInstall&&window._triggerInstall()">📲 Install</button>
       </div>
 
@@ -822,7 +833,7 @@ canvas{display:block;width:100%!important}
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
         <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">Community</a>
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
-        <span style="font-size:0.6rem;color:var(--text3)">© 2026 Personal GT</span>
+        <span style="font-size:0.6rem;color:var(--text3)">© 2026 Goal Tracker</span>
       </div>
     </div>
   </div>
@@ -832,8 +843,8 @@ canvas{display:block;width:100%!important}
 <!-- ── APP FOOTER ── -->
 <footer class="app-footer">
   <div class="app-footer-left">
-    <div class="app-footer-logo">PG</div>
-    <span style="font-weight:600;color:var(--text2)">Personal GT</span>
+    <div class="app-footer-logo">LV</div>
+    <span style="font-weight:600;color:var(--text2)">LivSahaj</span>
     <span class="app-footer-sep">·</span>
     <span>© 2026</span>
   </div>
@@ -848,9 +859,40 @@ canvas{display:block;width:100%!important}
     <a class="app-footer-share" href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="Share on X">𝕏</a>
     <a class="app-footer-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="LinkedIn">in</a>
     <a class="app-footer-share" href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="Reddit">r/</a>
-    <button class="app-footer-share" id="appCopyBtn" onclick="copyAppLink()" title="Copy link">⎘</button>
+    <button class="app-footer-share" id="appCopyBtn" onclick="copyAppLink()" title="Copy link">🔗</button>
   </div>
 </footer>
+</div>
+
+<!-- ── SETTINGS MODAL ── -->
+<div id="settingsModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSettings()">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:360px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem">
+      <span style="font-size:1rem;font-weight:700;color:var(--text)">⚙ Settings</span>
+      <button class="btn btn-ic btn-g" onclick="closeSettings()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem">
+      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--amber);color:var(--amber)" onclick="confirmResetStreak()">Reset Streak</button>
+      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--red);color:var(--red)" onclick="confirmResetData()">Reset All Data</button>
+    </div>
+    <div style="font-size:0.72rem;color:var(--text3);margin-top:0.85rem;line-height:1.6">Reset Streak clears your current streak count only. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
+  </div>
+</div>
+
+<!-- ── SHARE MODAL ── -->
+<div id="shareModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeShare()">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:340px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem">
+      <span style="font-size:1rem;font-weight:700;color:var(--text)">📤 Share</span>
+      <button class="btn btn-ic btn-g" onclick="closeShare()">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
+      <a href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:var(--text)">X</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#0A66C2">in LinkedIn</a>
+      <a href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#FF4500">r/ Reddit</a>
+      <button class="btn btn-sm btn-g" style="justify-content:center;font-weight:600;color:var(--text2)" onclick="copyAppLink()">Copy link</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── HAMBURGER OVERLAY + DRAWER ── -->
@@ -858,8 +900,8 @@ canvas{display:block;width:100%!important}
 <div class="hbg-drawer" id="hbgDrawer">
   <div class="hbg-hd">
     <div class="hbg-hd-brand">
-      <div class="brand-mark" style="width:24px;height:24px;font-size:9px">DT</div>
-      <span class="hbg-title">Day Tracker</span>
+      <div class="brand-mark" style="width:24px;height:24px;font-size:9px">LV</div>
+      <span class="hbg-title">Goal Tracker</span>
     </div>
     <button class="hbg-close" onclick="closeDrawer()">✕</button>
   </div>
@@ -874,6 +916,9 @@ canvas{display:block;width:100%!important}
     <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hbg-tab hbg-tab-link">
       <div class="hbg-ico">📄</div><span class="hbg-lbl">About GT</span>
     </a>
+    <button class="hbg-tab hbg-tab-link" style="width:100%;text-align:left;border:none;background:none;cursor:pointer" onclick="closeDrawer();openShare()">
+      <div class="hbg-ico">📤</div><span class="hbg-lbl">Share</span>
+    </button>
     <button class="hbg-tab hbg-tab-link" id="hbgInstallBtn" style="display:none;width:100%;text-align:left;border:none;background:none;cursor:pointer" onclick="window._triggerInstall&&window._triggerInstall()">
       <div class="hbg-ico">📲</div><span class="hbg-lbl">Install app</span>
     </button>
@@ -884,7 +929,7 @@ canvas{display:block;width:100%!important}
       <span class="hbg-foot-sep">·</span>
       <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">Community</a>
     </div>
-    <div class="hbg-foot-copy">© 2026 Personal GT</div>
+    <div class="hbg-foot-copy">© 2026 Goal Tracker</div>
   </div>
 </div>
 
@@ -945,7 +990,7 @@ canvas{display:block;width:100%!important}
 
 <!-- Install banner (shown when PWA installable) -->
 <div id="installBanner" style="display:none;position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:0.65rem 1rem;align-items:center;gap:0.75rem;z-index:990;box-shadow:0 4px 24px rgba(0,0,0,.3);font-size:0.82rem;white-space:nowrap">
-  <span>📲 Install Day Tracker as an app</span>
+  <span>📲 Install Goal Tracker as an app</span>
   <button class="btn btn-sm btn-p" onclick="window._triggerInstall()">Install</button>
   <button class="btn btn-sm btn-g" onclick="this.parentElement.style.display='none'">✕</button>
 </div>
@@ -991,7 +1036,7 @@ const TODAY=()=>new Date().toISOString().slice(0,10);
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'dark',openTab:null,fpWidth:480};
+let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'light',openTab:null,fpWidth:480};
 let timerIv=null;
 const CH={};
 // Disable Chart.js animations globally — prevents rubber-band on first open
@@ -1040,7 +1085,7 @@ function syncHdrNav(tabId){
 }
 
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeDrawer();closeSettings();closeShare();}});
 
 // ── HAMBURGER DRAWER ──────────────────────────────────────────
 function openDrawer(){
@@ -1091,9 +1136,19 @@ function copyAppLink(){
   if(navigator.clipboard){
     navigator.clipboard.writeText(url).then(function(){
       if(btn){btn.textContent='✓';setTimeout(function(){btn.textContent='⎘';},2000);}
+      toast('Link copied');
+      closeShare();
     });
   }
 }
+
+// ── SETTINGS MODAL ──────────────────────────────────────────
+function openSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='flex';}
+function closeSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='none';}
+
+// ── SHARE MODAL ──────────────────────────────────────────
+function openShare(){const m=document.getElementById('shareModal');if(m)m.style.display='flex';}
+function closeShare(){const m=document.getElementById('shareModal');if(m)m.style.display='none';}
 
 
 // ═══════════════════════════════════════════
@@ -1503,7 +1558,7 @@ function buildWeekly(){
     <button class="btn btn-sm btn-g" onclick="S.wRepOff--;renderPanel('weekly')">‹</button>
     <span id="wRepTitle" style="font-size:0.8rem;font-family:var(--mono);color:var(--text2);flex:1;text-align:center"></span>
     <button class="btn btn-sm btn-g" onclick="S.wRepOff++;if(S.wRepOff>0)S.wRepOff=0;renderPanel('weekly')">›</button>
-    <button class="btn btn-sm" onclick="copyRep('wBody')">Copy</button>
+    <button class="btn btn-sm" onclick="exportWeeklyCSV()">⬇ Export</button>
   </div><div id="wBody"></div>`;
 }
 function renderWeeklyRep(){
@@ -1534,10 +1589,12 @@ function renderWeeklyRep(){
         <div class="rep-card"><div class="rep-title">Completion</div><div class="rep-val" style="color:var(--accent)">${pct}%</div></div>
         <div class="rep-card"><div class="rep-title">XP earned</div><div class="rep-val" style="color:var(--green)">${xp}</div></div>
         <div class="rep-card"><div class="rep-title">Done</div><div class="rep-val">${done} / ${h.length}</div></div>
-        <div class="rep-card"><div class="rep-title">Leftover</div><div class="rep-val" style="color:var(--red)">${missed.length}</div></div>
-        <div class="rep-card"><div class="rep-title">Carry fwd</div><div class="rep-val" style="color:var(--amber)">${carried.length}</div></div>
+        <div class="rep-card" style="cursor:pointer" onclick="event.stopPropagation();toggleRevealList(this,0)"><div class="rep-title">Leftover ${missed.length?'<span style="font-size:0.6rem;color:var(--text3)">▾</span>':''}</div><div class="rep-val" style="color:var(--red)">${missed.length}</div></div>
+        <div class="rep-card" style="cursor:pointer" onclick="event.stopPropagation();toggleRevealList(this,1)"><div class="rep-title">Carry fwd ${carried.length?'<span style="font-size:0.6rem;color:var(--text3)">▾</span>':''}</div><div class="rep-val" style="color:var(--amber)">${carried.length}</div></div>
         <div class="rep-card"><div class="rep-title">New goals</div><div class="rep-val">${newTasks.length}</div></div>
       </div>
+      <div class="reveal-list" style="display:none;font-size:0.78rem;color:var(--text2);padding:0.5rem 0.65rem;background:var(--bg2);border-radius:6px;margin:-0.3rem 0 0.55rem;line-height:1.7">${missed.length?missed.map(t=>esc(t.name)).join('<br>'):'None'}</div>
+      <div class="reveal-list" style="display:none;font-size:0.78rem;color:var(--text2);padding:0.5rem 0.65rem;background:var(--bg2);border-radius:6px;margin:-0.3rem 0 0.55rem;line-height:1.7">${carried.length?carried.map(t=>esc(t.name)).join('<br>'):'None'}</div>
       <div style="font-size:0.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:0.3rem">Goal vs. achieved</div>
       <ul style="list-style:none;padding:0;line-height:1.9">${bullets||'<li style="color:var(--text3);font-size:0.8rem">No data</li>'}</ul>
     </div>`;
@@ -1570,7 +1627,7 @@ function toggleWkDay(ds,card){
 }
 
 // ── Monthly report ──
-function buildMonthly(){return`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem;flex-wrap:wrap"><button class="btn btn-sm btn-g" onclick="S.mRepOff--;renderPanel('monthly')">‹</button><span id="mRepTitle" style="font-size:0.8rem;font-family:var(--mono);color:var(--text2);flex:1;text-align:center"></span><button class="btn btn-sm btn-g" onclick="S.mRepOff++;if(S.mRepOff>0)S.mRepOff=0;renderPanel('monthly')">›</button><button class="btn btn-sm" onclick="copyRep('mBody')">Copy</button></div><div id="mBody"></div>`;}
+function buildMonthly(){return`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem;flex-wrap:wrap"><button class="btn btn-sm btn-g" onclick="S.mRepOff--;renderPanel('monthly')">‹</button><span id="mRepTitle" style="font-size:0.8rem;font-family:var(--mono);color:var(--text2);flex:1;text-align:center"></span><button class="btn btn-sm btn-g" onclick="S.mRepOff++;if(S.mRepOff>0)S.mRepOff=0;renderPanel('monthly')">›</button><button class="btn btn-sm" onclick="exportMonthlyCSV()">⬇ Export</button></div><div id="mBody"></div>`;}
 function renderMonthlyRep(){
   const el=document.getElementById('mBody');if(!el)return;
   const base=new Date();base.setMonth(base.getMonth()+S.mRepOff);
@@ -1596,6 +1653,10 @@ function renderMonthlyRep(){
     const allDsInWeek=d.days.map(x=>x.ds);
     const newTasksThisWeek=S.tasks.filter(t=>allDsInWeek.includes(t.created)).length;
     const achNames=[...new Set(d.days.flatMap(day=>day.tasks.filter(t=>t.done).map(t=>t.name)))];
+    // Real calendar date range for this week bucket — computed independently of whether days were tracked
+    const wkStartDay=(Number(wn)-1)*7+1;const wkEndDay=Math.min(wkStartDay+6,dim);
+    const wkStartDate=new Date(year,month,wkStartDay);const wkEndDate=new Date(year,month,wkEndDay);
+    const wkRange=wkStartDate.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' – '+wkEndDate.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
     const goalVsAch=d.days.flatMap(day=>{
       const dt=new Date(day.ds+'T00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric'});
       return day.tasks.map(t=>`<li style="margin-bottom:2px;font-size:0.8rem"><span style="color:${t.done?'var(--green)':'var(--red)'}">${t.done?'✓':'✗'}</span> <span style="color:var(--text3);font-size:0.7rem">${dt}</span> ${esc(t.name)}</li>`);
@@ -1613,8 +1674,11 @@ function renderMonthlyRep(){
       <ul style="list-style:none;padding:0;line-height:1.85">${goalVsAch||'<li style="color:var(--text3);font-size:0.8rem">No data</li>'}</ul>
     </div>`;
     weekRows+=`<div class="rep-card" style="margin-bottom:0.35rem;padding:0;overflow:hidden;cursor:pointer" onclick="toggleMthWk(this)">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem">
-        <span class="rep-title">Week ${wn}</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.75rem;flex-wrap:wrap;gap:0.35rem">
+        <div>
+          <span class="rep-title">Week ${wn}</span>
+          <div style="font-size:0.66rem;color:var(--text3);font-family:var(--mono);margin-top:1px">${wkRange}</div>
+        </div>
         <div style="display:flex;align-items:center;gap:0.55rem">
           <div style="width:60px;height:3px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:${p}%;height:100%;background:var(--green);border-radius:2px"></div></div>
           <span style="font-size:0.72rem;font-family:var(--mono);color:var(--text2)">${p}%</span>
@@ -1640,6 +1704,17 @@ function toggleMthWk(card){
   const open=det.style.display==='none';
   det.style.display=open?'block':'none';
   if(arr)arr.textContent=open?'▴':'▾';
+}
+function toggleRevealList(tileEl,idx){
+  // Find the detail container that holds both the tile and the reveal lists
+  const container=tileEl.closest('div[style*="border-top"]');
+  if(!container)return;
+  const lists=container.querySelectorAll('.reveal-list');
+  const target=lists[idx];
+  if(!target)return;
+  const open=target.style.display==='none';
+  lists.forEach(l=>{l.style.display='none';});
+  target.style.display=open?'block':'none';
 }
 
 // ── About Ranks ──
@@ -1682,7 +1757,42 @@ function buildRanks(){
     </div>`;
   }).join('')}</div>`;
 }
-function copyRep(id){const el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.innerText||'').then(()=>toast('Report copied')).catch(()=>toast('Copy failed'));}
+function downloadCSV(rows,filename){
+  const csv=rows.map(r=>r.map(c=>{
+    const s=String(c==null?'':c).replace(/"/g,'""');
+    return /[",\n]/.test(s)?'"'+s+'"':s;
+  }).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast('Exported: '+filename);
+}
+function exportWeeklyCSV(){
+  const base=new Date();base.setDate(base.getDate()+((S.wRepOff||0)*7));
+  const mon=new Date(base);mon.setDate(base.getDate()-((base.getDay()+6)%7));
+  const rows=[['Date','Task','Status','Category','Priority','XP Earned']];
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const ds=d.toISOString().slice(0,10);
+    const h=S.history[ds]||[];
+    h.forEach(t=>rows.push([ds,t.name,t.done?'Done':'Missed',t.cat||'',t.priority||'',t.xpEarned||0]));
+  }
+  downloadCSV(rows,'weekly-report-'+mon.toISOString().slice(0,10)+'.csv');
+}
+function exportMonthlyCSV(){
+  const base=new Date();base.setMonth(base.getMonth()+(S.mRepOff||0));
+  const year=base.getFullYear(),month=base.getMonth(),dim=new Date(year,month+1,0).getDate();
+  const rows=[['Date','Task','Status','Category','Priority','XP Earned']];
+  for(let day=1;day<=dim;day++){
+    const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const h=S.history[ds]||[];
+    h.forEach(t=>rows.push([ds,t.name,t.done?'Done':'Missed',t.cat||'',t.priority||'',t.xpEarned||0]));
+  }
+  downloadCSV(rows,'monthly-report-'+year+'-'+String(month+1).padStart(2,'0')+'.csv');
+}
 
 // ═══════════════════════════════════════════
 // MODAL
@@ -1792,7 +1902,7 @@ function renderTasks(){
 
   const el=document.getElementById('taskList');
   if(!tasks.length){
-    el.innerHTML=`<div style="text-align:center;padding:2rem 1rem;color:var(--text3);font-size:0.85rem">No missions match filter.<br>Click the '+ Add goal' button to add one</div>`;
+    el.innerHTML=`<div style="text-align:center;padding:2rem 1rem;color:var(--text3);font-size:0.85rem">No missions match filter.<br>Add one above ↑</div>`;
   }else{
     const ptag={High:'tg-h',Medium:'tg-m',Low:'tg-l'};
     el.innerHTML=tasks.map(t=>{
@@ -2119,6 +2229,23 @@ function confirmReset(){
   S.tasks.forEach(t=>{t.status='pending';t.timerSecs=0;t.sessionNote='';});
   clearTmr();S.activeId=null;S.timerSecs=0;
   save();renderAll();toast('Day reset. Ready for new missions.');
+}
+function confirmResetStreak(){
+  if(!confirm('Reset your streak to 0? This cannot be undone.'))return;
+  S.streak=0;S.lastActive=null;
+  save();renderAll();toast('Streak reset to 0.');
+  closeSettings();
+}
+function confirmResetData(){
+  if(!confirm('Reset ALL data? This permanently deletes every task, history entry, journal note, and streak — everything. This cannot be undone.'))return;
+  if(!confirm('Are you absolutely sure? Type nothing needed — just confirm one more time to wipe everything.'))return;
+  S.tasks=[];S.history={};S.journal={};S.streak=0;S.lastActive=null;S.activeId=null;S.timerSecs=0;
+  clearTmr();
+  try{localStorage.removeItem('dayops_v6');}catch(e){}
+  save();renderAll();
+  if(S.openTab)closePanel();
+  toast('All data cleared. Starting fresh.');
+  closeSettings();
 }
 
 // ═══════════════════════════════════════════
