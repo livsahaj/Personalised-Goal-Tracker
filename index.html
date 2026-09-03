@@ -661,7 +661,7 @@ canvas{display:block;width:100%!important}
   </div>
 
   <!-- About GT — sits between brand and nav -->
-  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hdr-about-link" id="hdrAboutLink">About GT</a>
+  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hdr-about-link" id="hdrAboutLink">About App</a>
 
   <!-- Centre-left: nav buttons (desktop only) -->
   <nav class="hdr-nav" id="hdrNav">
@@ -812,7 +812,7 @@ canvas{display:block;width:100%!important}
     <div class="sb-foot">
       <!-- About + Install -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem">
-        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">About App</a>
         <button class="btn btn-sm btn-g" id="sbInstallBtn" style="flex:1;font-size:0.72rem;display:none" onclick="window._triggerInstall&&window._triggerInstall()">📲 Install</button>
       </div>
 
@@ -1792,7 +1792,7 @@ function renderTasks(){
 
   const el=document.getElementById('taskList');
   if(!tasks.length){
-    el.innerHTML=`<div style="text-align:center;padding:2rem 1rem;color:var(--text3);font-size:0.85rem">No missions match filter.<br>Add one above ↑</div>`;
+    el.innerHTML=`<div style="text-align:center;padding:2rem 1rem;color:var(--text3);font-size:0.85rem">No missions match filter.<br>Click the '+ Add goal' button to add one</div>`;
   }else{
     const ptag={High:'tg-h',Medium:'tg-m',Low:'tg-l'};
     el.innerHTML=tasks.map(t=>{
