@@ -3,10 +3,9 @@ const CACHE_NAME = 'daytracker-v2';
 const CDN_CACHE  = 'daytracker-cdn-v2';
 
 // App shell — files to pre-cache on install
-// Works whether deployed as index.html OR dayops.html
 const SHELL = [
   './',
-  './index.html',
+  './app.html',
   './manifest.json',
 ];
 
