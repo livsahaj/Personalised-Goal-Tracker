@@ -654,7 +654,7 @@ canvas{display:block;width:100%!important}
    override last guarantees it always wins, regardless of where the base
    rules for these classes live or get edited in future. */
 @media(max-width:900px){
-  .hdr-nav,.hdr-about-link{display:none!important}
+  .hdr-nav,.hdr-about-link,.hdr-account-btn{display:none!important}
   .hbg-btn{display:flex!important}
 }
 </style>
@@ -710,7 +710,7 @@ canvas{display:block;width:100%!important}
       <span class="xp-num" id="xpTxt">0 / 0</span>
     </div>
     <button class="btn-th" onclick="toggleTheme()" title="Toggle theme"><span id="thIcon">☀️</span></button>
-    <button class="btn-th" onclick="openSettings()" title="Settings" aria-label="Settings">⚙</button>
+    <button class="hdr-nav-btn hdr-account-btn" onclick="toggleTab('account',this)" style="white-space:nowrap">👤 Account</button>
   </div>
   <!-- Hamburger — always rightmost -->
   <button class="hbg-btn" id="hbgBtn" onclick="openDrawer()" aria-label="Open menu">☰</button>
@@ -865,20 +865,6 @@ canvas{display:block;width:100%!important}
 </div>
 
 <!-- ── SETTINGS MODAL ── -->
-<div id="settingsModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSettings()">
-  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:360px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem">
-      <span style="font-size:1rem;font-weight:700;color:var(--text)">⚙ Settings</span>
-      <button class="btn btn-ic btn-g" onclick="closeSettings()">✕</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:0.5rem">
-      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--amber);color:var(--amber)" onclick="confirmResetStreak()">Reset Streak</button>
-      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--red);color:var(--red)" onclick="confirmResetData()">Reset All Data</button>
-    </div>
-    <div style="font-size:0.72rem;color:var(--text3);margin-top:0.85rem;line-height:1.6">Reset Streak clears your current streak count only. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
-  </div>
-</div>
-
 <!-- ── SHARE MODAL ── -->
 <div id="shareModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeShare()">
   <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:340px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
@@ -909,9 +895,16 @@ canvas{display:block;width:100%!important}
     <div class="hbg-tab" onclick="drawerTab('focus')"><div class="hbg-ico">🎯</div><span class="hbg-lbl">Focus</span></div>
     <div class="hbg-tab" onclick="drawerTab('coach')"><div class="hbg-ico">🧠</div><span class="hbg-lbl">Life Coach</span></div>
     <div class="hbg-tab" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
-    <div class="hbg-tab" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
-    <div class="hbg-tab" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
+    <div class="hbg-tab" onclick="toggleDrawerReports(event)" style="justify-content:space-between">
+      <span style="display:flex;align-items:center;gap:0.65rem"><span class="hbg-ico">📊</span><span class="hbg-lbl">Reports</span></span>
+      <span id="drawerReportsCaret" style="font-size:0.7rem;color:var(--text3);transition:transform .2s ease">▾</span>
+    </div>
+    <div id="drawerReportsSub" style="display:none">
+      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
+      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
+    </div>
     <div class="hbg-tab" onclick="drawerTab('ranks')"><div class="hbg-ico">🎖</div><span class="hbg-lbl">About Ranks</span></div>
+    <div class="hbg-tab" onclick="drawerTab('account')"><div class="hbg-ico">👤</div><span class="hbg-lbl">Account</span></div>
     <div class="hbg-tab-sep"></div>
     <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" target="_blank" class="hbg-tab hbg-tab-link">
       <div class="hbg-ico">📄</div><span class="hbg-lbl">About GT</span>
@@ -1015,6 +1008,235 @@ canvas{display:block;width:100%!important}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ═══════════════════════════════════════════
+// SUPABASE CONNECTION — step 1: connect only, no UI yet
+// If offline or CDN fails to load, this fails silently —
+// the rest of the app (local-only free tier) keeps working regardless.
+// ═══════════════════════════════════════════
+const SUPABASE_URL = 'https://zspanmkkohakufdgynaq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a9BUn99yPJxzq314suYFEw_ONpgZzqr';
+let sb = null;
+try {
+  if (typeof window.supabase !== 'undefined') {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    console.log('[Supabase] Client initialized');
+  } else {
+    console.warn('[Supabase] Library did not load — likely offline. App continues in local-only mode.');
+  }
+} catch (e) {
+  console.warn('[Supabase] Failed to initialize:', e.message);
+}
+
+// ═══════════════════════════════════════════
+// ACCOUNT — auth state + panel content
+// ═══════════════════════════════════════════
+let currentUser=null;
+let currentProfile=null;
+
+async function refreshAuthState(){
+  if(!sb)return;
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(session&&session.user){
+      currentUser=session.user;
+      let {data:profile}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
+      if(!profile){
+        const {data:newProfile}=await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,tier:'free'}).select().single();
+        profile=newProfile;
+      }
+      currentProfile=profile;
+    }else{
+      currentUser=null;
+      currentProfile=null;
+    }
+  }catch(e){
+    console.warn('[Account] Failed to refresh auth state:',e.message);
+    currentUser=null;currentProfile=null;
+  }
+  if(S.openTab==='account')renderPanel('account');
+}
+
+let authMode='signin'; // 'signin' | 'signup' | 'forgot' | 'newpassword'
+
+function switchAuthMode(mode){
+  authMode=mode;
+  if(S.openTab==='account')renderPanel('account');
+}
+
+function buildAccount(){
+  let html='<div style="padding:0.25rem 0 1rem">';
+
+  if(currentUser&&currentProfile){
+    const memberSince=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
+    const tierLabel=(currentProfile.tier||'free').charAt(0).toUpperCase()+(currentProfile.tier||'free').slice(1);
+    html+=`
+      <div class="sec-lbl" style="margin-bottom:0.6rem">Profile</div>
+      <div class="ins-grid" style="margin-bottom:1rem">
+        <div class="ins-card" style="grid-column:1/-1"><div class="ins-lbl">Email</div><div class="ins-val" style="font-size:0.85rem;word-break:break-all">${currentUser.email}</div></div>
+        <div class="ins-card"><div class="ins-lbl">Member since</div><div class="ins-val" style="font-size:0.85rem">${memberSince}</div></div>
+        <div class="ins-card"><div class="ins-lbl">Current plan</div><div class="ins-val" style="font-size:0.85rem;color:var(--accent)">${tierLabel}</div></div>
+      </div>
+      ${currentProfile.tier==='free'?'<a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank" class="btn btn-sm btn-p" style="width:100%;justify-content:center;margin-bottom:0.5rem">Upgrade plan</a>':''}
+      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:1rem">Last synced: cloud sync not yet available — coming soon</div>
+      <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="signOutUser()">Sign out</button>
+      ${currentProfile.tier!=='free'?'<button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--text3);color:var(--text3)" onclick="alert(\'Contact support to cancel — this will be self-serve soon.\')">Cancel membership</button>':''}
+    `;
+  }else if(authMode==='newpassword'){
+    html+=`
+      <div class="sec-lbl" style="margin-bottom:0.5rem">Set a new password</div>
+      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">You followed a reset link — choose a new password below.</div>
+      <input type="password" id="authNewPassword" placeholder="New password (min 6 characters)" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="submitNewPassword()" id="newPasswordBtn">Set new password</button>
+      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
+    `;
+  }else if(authMode==='forgot'){
+    html+=`
+      <div class="sec-lbl" style="margin-bottom:0.5rem">Reset your password</div>
+      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">We'll email you a link to set a new password.</div>
+      <input type="email" id="authEmail" placeholder="you@example.com" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="requestPasswordReset()" id="resetReqBtn">Send reset link</button>
+      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
+      <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode('signin')">← Back to sign in</button>
+    `;
+  }else{
+    const isSignup=authMode==='signup';
+    html+=`
+      <div class="sec-lbl" style="margin-bottom:0.5rem">Account</div>
+      <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem">
+        <button class="btn btn-sm ${!isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signin')">Sign In</button>
+        <button class="btn btn-sm ${isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signup')">Sign Up</button>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — free tier included.</div>
+      <input type="email" id="authEmail" placeholder="you@example.com" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <input type="password" id="authPassword" placeholder="Password (min 6 characters)" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="${isSignup?'signUpWithPassword()':'signInWithPassword()'}" id="authSubmitBtn">${isSignup?'Create account':'Sign in'}</button>
+      ${!isSignup?'<button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode(\'forgot\')">Forgot password?</button>':''}
+      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
+    `;
+  }
+
+  html+=`
+    <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
+    <div style="font-size:0.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:0.6rem">Danger zone</div>
+    <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--amber);color:var(--amber);margin-bottom:0.5rem" onclick="confirmResetStreak()">Reset Streak</button>
+    <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--red);color:var(--red)" onclick="confirmResetData()">Reset All Data</button>
+    <div style="font-size:0.7rem;color:var(--text3);margin-top:0.6rem;line-height:1.5">These act on this device's local data regardless of sign-in status. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
+  </div>`;
+
+  return html;
+}
+
+function signInWithPassword(){
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const password=document.getElementById('authPassword').value||'';
+  const msgEl=document.getElementById('authMsg');
+  const btn=document.getElementById('authSubmitBtn');
+  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
+  if(!password){msgEl.textContent='Enter your password.';msgEl.style.color='var(--red)';return;}
+  if(!sb){msgEl.textContent='Sign-in unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
+  btn.disabled=true;btn.textContent='Signing in...';msgEl.textContent='';
+  sb.auth.signInWithPassword({email:email,password:password}).then(function(result){
+    btn.disabled=false;btn.textContent='Sign in';
+    if(result.error){
+      msgEl.textContent=result.error.message;
+      msgEl.style.color='var(--red)';
+    }
+    // success — onAuthStateChange fires refreshAuthState() and re-renders automatically
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='Sign in';
+    msgEl.textContent='Network error — try again.';
+    msgEl.style.color='var(--red)';
+  });
+}
+function signUpWithPassword(){
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const password=document.getElementById('authPassword').value||'';
+  const msgEl=document.getElementById('authMsg');
+  const btn=document.getElementById('authSubmitBtn');
+  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
+  if(!password||password.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
+  if(!sb){msgEl.textContent='Sign-up unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
+  btn.disabled=true;btn.textContent='Creating account...';msgEl.textContent='';
+  sb.auth.signUp({email:email,password:password}).then(function(result){
+    btn.disabled=false;btn.textContent='Create account';
+    if(result.error){
+      msgEl.textContent=result.error.message;
+      msgEl.style.color='var(--red)';
+    }else if(result.data&&result.data.user&&!result.data.session){
+      msgEl.textContent='Account created — check your inbox to confirm your email before signing in.';
+      msgEl.style.color='var(--green)';
+    }
+    // if session came back immediately (email confirmation off), onAuthStateChange handles the rest
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='Create account';
+    msgEl.textContent='Network error — try again.';
+    msgEl.style.color='var(--red)';
+  });
+}
+function requestPasswordReset(){
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const msgEl=document.getElementById('authMsg');
+  const btn=document.getElementById('resetReqBtn');
+  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
+  if(!sb){msgEl.textContent='Unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
+  btn.disabled=true;btn.textContent='Sending...';msgEl.textContent='';
+  sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href}).then(function(result){
+    btn.disabled=false;btn.textContent='Send reset link';
+    if(result.error){
+      msgEl.textContent=result.error.message;
+      msgEl.style.color='var(--red)';
+    }else{
+      msgEl.textContent='Check your inbox — we sent a password reset link to '+email;
+      msgEl.style.color='var(--green)';
+    }
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='Send reset link';
+    msgEl.textContent='Network error — try again.';
+    msgEl.style.color='var(--red)';
+  });
+}
+function submitNewPassword(){
+  const newPassword=document.getElementById('authNewPassword').value||'';
+  const msgEl=document.getElementById('authMsg');
+  const btn=document.getElementById('newPasswordBtn');
+  if(!newPassword||newPassword.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
+  if(!sb)return;
+  btn.disabled=true;btn.textContent='Saving...';msgEl.textContent='';
+  sb.auth.updateUser({password:newPassword}).then(function(result){
+    btn.disabled=false;btn.textContent='Set new password';
+    if(result.error){
+      msgEl.textContent=result.error.message;
+      msgEl.style.color='var(--red)';
+    }else{
+      authMode='signin';
+      msgEl.textContent='Password updated — you are now signed in.';
+      msgEl.style.color='var(--green)';
+      refreshAuthState();
+    }
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='Set new password';
+    msgEl.textContent='Network error — try again.';
+    msgEl.style.color='var(--red)';
+  });
+}
+function signOutUser(){
+  if(!sb)return;
+  sb.auth.signOut().then(function(){
+    currentUser=null;currentProfile=null;authMode='signin';
+    if(S.openTab==='account')renderPanel('account');
+  });
+}
+if(sb){
+  sb.auth.onAuthStateChange(function(event){
+    if(event==='PASSWORD_RECOVERY')authMode='newpassword';
+    refreshAuthState();
+  });
+  refreshAuthState();
+}
+
+</script>
 <script>
 // ═══════════════════════════════════════════
 // CONSTANTS
@@ -1030,7 +1252,7 @@ const RANKS=[
   {name:'Master',min:365,max:549},{name:'Grand Master',min:550,max:999},
   {name:'Sovereign',min:1000,max:1499},{name:'Legend',min:1500,max:Infinity}
 ];
-const TITLES={focus:'Focus',coach:'Life Coach',progress:'Progress Charts',weekly:'Weekly Report',monthly:'Monthly Report',ranks:'About Ranks'};
+const TITLES={focus:'Focus',coach:'Life Coach',progress:'Progress Charts',weekly:'Weekly Report',monthly:'Monthly Report',ranks:'About Ranks',account:'Account'};
 const TODAY=()=>new Date().toISOString().slice(0,10);
 
 // ═══════════════════════════════════════════
@@ -1085,7 +1307,7 @@ function syncHdrNav(tabId){
 }
 
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeDrawer();closeSettings();closeShare();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeDrawer();closeShare();}});
 
 // ── HAMBURGER DRAWER ──────────────────────────────────────────
 function openDrawer(){
@@ -1111,6 +1333,15 @@ function syncDrawerState(){
       if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+S.openTab+"'"))t.classList.add('on');
     });
   }
+}
+function toggleDrawerReports(e){
+  e.stopPropagation();
+  const sub=document.getElementById('drawerReportsSub');
+  const caret=document.getElementById('drawerReportsCaret');
+  if(!sub)return;
+  const open=sub.style.display==='none';
+  sub.style.display=open?'block':'none';
+  if(caret)caret.style.transform=open?'rotate(180deg)':'rotate(0deg)';
 }
 function drawerTab(id){
   closeDrawer();
@@ -1143,8 +1374,7 @@ function copyAppLink(){
 }
 
 // ── SETTINGS MODAL ──────────────────────────────────────────
-function openSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='flex';}
-function closeSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='none';}
+
 
 // ── SHARE MODAL ──────────────────────────────────────────
 function openShare(){const m=document.getElementById('shareModal');if(m)m.style.display='flex';}
@@ -1348,6 +1578,7 @@ function renderPanel(id){
     else if(id==='weekly'){el.innerHTML=buildWeekly();renderWeeklyRep();}
     else if(id==='monthly'){el.innerHTML=buildMonthly();renderMonthlyRep();}
     else if(id==='ranks') el.innerHTML=buildRanks();
+    else if(id==='account') el.innerHTML=buildAccount();
   }catch(e){console.warn('Panel render error ['+id+']:',e);}
 }
 
@@ -2313,7 +2544,6 @@ function confirmResetStreak(){
   if(!confirm('Reset your streak to 0? This cannot be undone.'))return;
   S.streak=0;S.lastActive=null;
   save();renderAll();toast('Streak reset to 0.');
-  closeSettings();
 }
 function confirmResetData(){
   if(!confirm('Reset ALL data? This permanently deletes every task, history entry, journal note, and streak — everything. This cannot be undone.'))return;
@@ -2324,7 +2554,6 @@ function confirmResetData(){
   save();renderAll();
   if(S.openTab)closePanel();
   toast('All data cleared. Starting fresh.');
-  closeSettings();
 }
 
 // ═══════════════════════════════════════════
