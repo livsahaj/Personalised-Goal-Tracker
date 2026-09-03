@@ -173,16 +173,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .hdr-nav-caret{font-size:0.8rem;color:inherit;opacity:0.75;margin-left:0.15rem;font-weight:700}
 /* Locked nav buttons */
 .hdr-nav-locked{position:relative}
-body.tier-free .hdr-nav-btn[data-tier="pro"],
-body.tier-free .hdr-nav-btn[data-tier="max"],
-body.tier-pro  .hdr-nav-btn[data-tier="max"]{
-  opacity:0.45;
-}
-body.tier-free .hdr-nav-btn[data-tier="pro"]::after,
-body.tier-free .hdr-nav-btn[data-tier="max"]::after,
-body.tier-pro  .hdr-nav-btn[data-tier="max"]::after{
-  content:' 🔒';font-size:0.6rem;
-}
+
 /* Reports dropdown */
 .hdr-nav-drop-wrap{position:relative}
 .hdr-nav-submenu{
@@ -200,34 +191,14 @@ body.tier-pro  .hdr-nav-btn[data-tier="max"]::after{
   transition:background var(--tr);
 }
 .hdr-nav-sub-item:hover{background:var(--bg3);color:var(--text)}
-body.tier-free .hdr-nav-sub-item[data-tier="pro"]::after,
-body.tier-pro  .hdr-nav-sub-item[data-tier="max"]::after{content:' 🔒';font-size:0.6rem}
+
 /* Hide nav on mobile — hamburger handles it (override lives at end of stylesheet — see NAV/HAMBURGER BREAKPOINT FIX) */
 
 /* ── LOCKED TABS ── */
 /* Body class drives all lock state — CSS-only, no per-tab JS needed */
-body.tier-free .tab-i[data-tier="pro"],
-body.tier-free .tab-i[data-tier="max"],
-body.tier-pro  .tab-i[data-tier="max"]{
-  opacity:0.42;
-  cursor:pointer; /* still tappable — fires upgrade modal */
-}
-body.tier-free .tab-i[data-tier="pro"] .tab-lbl::after,
-body.tier-free .tab-i[data-tier="max"] .tab-lbl::after,
-body.tier-pro  .tab-i[data-tier="max"] .tab-lbl::after{
-  content:' 🔒';font-size:0.6rem;vertical-align:middle;
-}
+
 /* Dropdown mirrors lock state */
-body.tier-free .nav-dd-item[data-tier="pro"],
-body.tier-free .nav-dd-item[data-tier="max"],
-body.tier-pro  .nav-dd-item[data-tier="max"]{
-  opacity:0.42;
-}
-body.tier-free .nav-dd-item[data-tier="pro"] .lock-badge::before,
-body.tier-free .nav-dd-item[data-tier="max"] .lock-badge::before,
-body.tier-pro  .nav-dd-item[data-tier="max"] .lock-badge::before{
-  content:'🔒';
-}
+
 
 /* ── HAMBURGER (mobile/tablet) ── */
 .hbg-btn{
@@ -281,12 +252,7 @@ body.tier-pro  .nav-dd-item[data-tier="max"] .lock-badge::before{
 .hbg-tab.on{background:var(--bg3);border-left-color:var(--accent);color:var(--text)}
 .hbg-tab .hbg-ico{font-size:16px;width:22px;text-align:center;flex-shrink:0}
 /* Locked state in drawer */
-body.tier-free .hbg-tab[data-tier="pro"],
-body.tier-free .hbg-tab[data-tier="max"],
-body.tier-pro  .hbg-tab[data-tier="max"]{opacity:0.42}
-body.tier-free .hbg-tab[data-tier="pro"] .hbg-lbl::after,
-body.tier-free .hbg-tab[data-tier="max"] .hbg-lbl::after,
-body.tier-pro  .hbg-tab[data-tier="max"] .hbg-lbl::after{content:' 🔒';font-size:0.65rem}
+
 .hbg-foot{padding:0.65rem 1rem;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:0.45rem}
 .hbg-foot-row{display:flex;gap:0.4rem}
 
@@ -746,15 +712,15 @@ canvas{display:block;width:100%!important}
   <nav class="hdr-nav" id="hdrNav">
     <button class="hdr-nav-btn" onclick="toggleTab('focus',this)">Focus</button>
     <button class="hdr-nav-btn" onclick="toggleTab('coach',this)">Life Coach</button>
-    <button class="hdr-nav-btn hdr-nav-locked" data-tier="pro" onclick="toggleTab('progress',this)">Progress</button>
+    <button class="hdr-nav-btn" onclick="toggleTab('progress',this)">Progress</button>
     <!-- Reports dropdown -->
     <div class="hdr-nav-drop-wrap" id="reportsWrap">
-      <button class="hdr-nav-btn hdr-nav-locked" data-tier="pro" onclick="toggleReportsMenu(event)">
+      <button class="hdr-nav-btn" onclick="toggleReportsMenu(event)">
         Reports <span class="hdr-nav-caret">▾</span>
       </button>
       <div class="hdr-nav-submenu" id="reportsMenu">
-        <button class="hdr-nav-sub-item" data-tier="pro" onclick="toggleTab('weekly',this);closeReportsMenu()">Weekly Report</button>
-        <button class="hdr-nav-sub-item" data-tier="pro" onclick="toggleTab('monthly',this);closeReportsMenu()">Monthly Report</button>
+        <button class="hdr-nav-sub-item" onclick="toggleTab('weekly',this);closeReportsMenu()">Weekly Report</button>
+        <button class="hdr-nav-sub-item" onclick="toggleTab('monthly',this);closeReportsMenu()">Monthly Report</button>
       </div>
     </div>
     <button class="hdr-nav-btn" onclick="toggleTab('ranks',this)">About Ranks</button>
@@ -884,9 +850,9 @@ canvas{display:block;width:100%!important}
     <div class="tab-list">
       <div class="tab-i" onclick="toggleTab('focus',this)"><div class="tab-ico">🎯</div><div class="tab-lbl">Focus</div></div>
       <div class="tab-i" onclick="toggleTab('coach',this)"><div class="tab-ico">🧠</div><div class="tab-lbl">Life Coach</div></div>
-      <div class="tab-i" data-tier="pro" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
-      <div class="tab-i" data-tier="pro" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
-      <div class="tab-i" data-tier="pro" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
+      <div class="tab-i" onclick="toggleTab('progress',this)"><div class="tab-ico">📈</div><div class="tab-lbl">Progress</div></div>
+      <div class="tab-i" onclick="toggleTab('weekly',this)"><div class="tab-ico">📋</div><div class="tab-lbl">Weekly Report</div></div>
+      <div class="tab-i" onclick="toggleTab('monthly',this)"><div class="tab-ico">🗓</div><div class="tab-lbl">Monthly Report</div></div>
       <div class="tab-i" onclick="toggleTab('ranks',this)"><div class="tab-ico">🎖</div><div class="tab-lbl">About Ranks</div></div>
     </div>
     <div class="sb-foot">
@@ -912,8 +878,8 @@ canvas{display:block;width:100%!important}
 <!-- ── APP FOOTER ── -->
 <footer class="app-footer">
   <div class="app-footer-left">
-    <div class="app-footer-logo">PG</div>
-    <span style="font-weight:600;color:var(--text2)">Goal Tracker</span>
+    <div class="app-footer-logo">LV</div>
+    <span style="font-weight:600;color:var(--text2)">LivSahaj</span>
     <span class="app-footer-sep">·</span>
     <span>© 2026</span>
   </div>
@@ -963,14 +929,14 @@ canvas{display:block;width:100%!important}
   <div class="hbg-tabs">
     <div class="hbg-tab" onclick="drawerTab('focus')"><div class="hbg-ico">🎯</div><span class="hbg-lbl">Focus</span></div>
     <div class="hbg-tab" onclick="drawerTab('coach')"><div class="hbg-ico">🧠</div><span class="hbg-lbl">Life Coach</span></div>
-    <div class="hbg-tab" data-tier="pro" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
+    <div class="hbg-tab" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
     <div class="hbg-tab" onclick="toggleDrawerReports(event)" style="justify-content:space-between">
       <span style="display:flex;align-items:center;gap:0.65rem"><span class="hbg-ico">📊</span><span class="hbg-lbl">Reports</span></span>
       <span id="drawerReportsCaret" style="font-size:0.7rem;color:var(--text3);transition:transform .2s ease">▾</span>
     </div>
     <div id="drawerReportsSub" style="display:none">
-      <div class="hbg-tab" data-tier="pro" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
-      <div class="hbg-tab" data-tier="pro" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
+      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
+      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
     </div>
     <div class="hbg-tab" onclick="drawerTab('ranks')"><div class="hbg-ico">🎖</div><span class="hbg-lbl">About Ranks</span></div>
     <div class="hbg-tab" onclick="drawerTab('account')"><div class="hbg-ico">👤</div><span class="hbg-lbl">Account</span></div>
@@ -1051,19 +1017,6 @@ canvas{display:block;width:100%!important}
 </div>
 
 <!-- Install banner (shown when PWA installable) -->
-<!-- Upgrade prompt modal -->
-<div id="upgradeModal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeUpgrade()">
-  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.75rem;max-width:340px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
-    <div style="font-size:2rem;margin-bottom:0.75rem" id="upgIcon">🔒</div>
-    <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem" id="upgTitle">Pro feature</div>
-    <div style="font-size:0.85rem;color:var(--text2);line-height:1.65;margin-bottom:1.25rem" id="upgMsg">Upgrade to Pro or Max to unlock this feature.</div>
-    <div style="display:flex;gap:0.5rem;justify-content:center">
-      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank" class="btn btn-sm btn-p" style="text-decoration:none;padding:0.5rem 1rem;font-size:0.82rem">See plans</a>
-      <button class="btn btn-sm btn-g" onclick="closeUpgrade()" style="font-size:0.82rem">Maybe later</button>
-    </div>
-  </div>
-</div>
-
 <div id="installBanner" style="display:none;position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:0.65rem 1rem;align-items:center;gap:0.75rem;z-index:990;box-shadow:0 4px 24px rgba(0,0,0,.3);font-size:0.82rem;white-space:nowrap">
   <span>📲 Install Goal Tracker as an app</span>
   <button class="btn btn-sm btn-p" onclick="window._triggerInstall()">Install</button>
@@ -1202,7 +1155,7 @@ function buildAccount(){
         <div class="acc-sync-note">Cloud sync isn't available yet. Once live, this will show a real date and time — e.g., 3 Sept 2026, 2:45 PM.</div>
         <button class="btn btn-sm btn-disabled-soon" style="width:100%;justify-content:center;margin-bottom:0.5rem" disabled>Sync data <span class="soon-tag">SOON</span></button>
         <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;border:1px solid var(--border2)" onclick="signOutUser()">Sign out</button>
-        <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="alert('To delete your account, email us at livsahaj@gmail.com — self-service deletion is coming soon.')">Delete account</button>
+        <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="startDeleteAccountFlow()">Delete account</button>
       </div>
 
     `;
@@ -1373,6 +1326,42 @@ function signOutUser(){
     if(S.openTab==='account')renderPanel('account');
   });
 }
+function startDeleteAccountFlow(){
+  if(!currentUser||!sb)return;
+  if(!confirm('Are you sure you want to delete your account?'))return;
+  const password=prompt('For your security, re-enter your password to continue:');
+  if(!password)return; // cancelled — no action taken
+  sb.auth.signInWithPassword({email:currentUser.email,password:password}).then(function(result){
+    if(result.error){
+      alert('Password incorrect — account deletion cancelled.');
+      return;
+    }
+    if(!confirm('⚠️ All your account data will be deleted forever and cannot be reversed. Continue?'))return;
+    performAccountDeletion();
+  }).catch(function(){
+    alert('Something went wrong verifying your password. Please try again.');
+  });
+}
+function performAccountDeletion(){
+  sb.auth.getSession().then(function(result){
+    const session=result.data.session;
+    if(!session){alert('Your session expired — please sign in again.');return;}
+    fetch(SUPABASE_URL+'/functions/v1/delete-account',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'}
+    }).then(function(res){return res.json();}).then(function(data){
+      if(data.error){
+        alert('Could not delete your account: '+data.error);
+      }else{
+        alert('Your account has been deleted.');
+        currentUser=null;currentProfile=null;authMode='signin';
+        if(S.openTab==='account')renderPanel('account');
+      }
+    }).catch(function(){
+      alert('Network error — could not reach the server. Please try again.');
+    });
+  });
+}
 if(sb){
   sb.auth.onAuthStateChange(function(event){
     if(event==='PASSWORD_RECOVERY')authMode='newpassword';
@@ -1403,7 +1392,7 @@ const TODAY=()=>new Date().toISOString().slice(0,10);
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'light',openTab:null,fpWidth:480,tier:'free'};
+let S={tasks:[],history:{},journal:{},streak:0,lastActive:null,activeId:null,timerSecs:0,timerOn:false,editId:null,chartRange:'week',mRepOff:0,wRepOff:0,hmOff:0,pomodoroMin:null,isBreak:false,theme:'light',openTab:null,fpWidth:480};
 let timerIv=null;
 const CH={};
 // Disable Chart.js animations globally — prevents rubber-band on first open
@@ -1424,8 +1413,6 @@ function toggleReportsMenu(e){
   e.stopPropagation();
   const menu=document.getElementById('reportsMenu');
   if(!menu)return;
-  // Gate check first
-  if(!requireTier('pro'))return;
   menu.classList.toggle('open');
 }
 function closeReportsMenu(){
@@ -1502,11 +1489,6 @@ window.addEventListener('beforeinstallprompt',function(){
 },true);
 
 // ── TIER BODY CLASS — drives all CSS lock states ──────────────────────────────────────────
-function applyTierClass(){
-  document.body.classList.remove('tier-free','tier-pro','tier-max');
-  document.body.classList.add('tier-'+(S.tier||'free'));
-}
-
 // ── FOOTER COPY LINK ──────────────────────────────────────────
 function copyAppLink(){
   var url=window.location.href;
@@ -1527,41 +1509,6 @@ function copyAppLink(){
 function openShare(){const m=document.getElementById('shareModal');if(m)m.style.display='flex';}
 function closeShare(){const m=document.getElementById('shareModal');if(m)m.style.display='none';}
 
-
-// Tier hierarchy: free < pro < max
-const TIER_RANK={free:0,pro:1,max:2};
-const TIER_FEATURES={
-  // pro features
-  progress:'pro', weekly:'pro', monthly:'pro',
-  // max features
-  coach_ai:'max'
-};
-function requireTier(needed){
-  const have=TIER_RANK[S.tier||'free']||0;
-  const need=TIER_RANK[needed]||0;
-  if(have>=need)return true;
-  showUpgrade(needed);return false;
-}
-function showUpgrade(needed){
-  const m=document.getElementById('upgradeModal');
-  const ti=document.getElementById('upgTitle');
-  const ms=document.getElementById('upgMsg');
-  const ic=document.getElementById('upgIcon');
-  if(!m)return;
-  if(needed==='max'){
-    if(ic)ic.textContent='⭐';
-    if(ti)ti.textContent='Max tier feature';
-    if(ms)ms.textContent='Upgrade to Max to unlock the AI coach, permanent cloud archive, and priority support.';
-  } else {
-    if(ic)ic.textContent='🔒';
-    if(ti)ti.textContent='Pro feature';
-    if(ms)ms.textContent='Upgrade to Pro or Max to unlock progress charts, weekly reports, monthly reports, and cloud sync.';
-  }
-  m.style.display='flex';
-}
-function closeUpgrade(){const m=document.getElementById('upgradeModal');if(m)m.style.display='none';}
-// Dev helper — cycle tier for testing (remove before production)
-window._setTier=function(t){S.tier=t;save();applyTierClass();toast('Tier set to: '+t);updateStats();};
 
 // ═══════════════════════════════════════════
 // THEME
@@ -1658,8 +1605,6 @@ function updateFooter(){
 // ═══════════════════════════════════════════
 function toggleTab(id,el){
   if(S.openTab===id){closePanel();return;}
-  // Feature gate — check tier before opening
-  if((id==='progress'||id==='weekly'||id==='monthly')&&!requireTier('pro'))return;
   S.openTab=id;
   document.querySelectorAll('.tab-i').forEach(t=>t.classList.remove('on'));
   if(el)el.classList.add('on');
@@ -2147,6 +2092,7 @@ function toggleMthWk(card){
   if(arr)arr.textContent=open?'▴':'▾';
 }
 function toggleRevealList(tileEl,idx){
+  // Find the detail container that holds both the tile and the reveal lists
   const container=tileEl.closest('div[style*="border-top"]');
   if(!container)return;
   const lists=container.querySelectorAll('.reveal-list');
@@ -2291,8 +2237,6 @@ function exportMonthlyCSV(){
 // MODAL
 // ═══════════════════════════════════════════
 function openModal(editId){
-  // Editing existing goals is a Pro feature
-  if(editId&&!requireTier('pro'))return;
   S.editId=editId||null;
   document.getElementById('addModal').classList.add('on');
   document.getElementById('mTitle').textContent=editId?'Edit mission':'New mission';
@@ -2811,7 +2755,6 @@ function init(){
   }
   load();
   applyTheme();
-  applyTierClass();
   updateDate();
   updateStreak();
   updateCatFilter();

@@ -1202,7 +1202,7 @@ function buildAccount(){
         <div class="acc-sync-note">Cloud sync isn't available yet. Once live, this will show a real date and time — e.g., 3 Sept 2026, 2:45 PM.</div>
         <button class="btn btn-sm btn-disabled-soon" style="width:100%;justify-content:center;margin-bottom:0.5rem" disabled>Sync data <span class="soon-tag">SOON</span></button>
         <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;border:1px solid var(--border2)" onclick="signOutUser()">Sign out</button>
-        <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="alert('To delete your account, email us at livsahaj@gmail.com — self-service deletion is coming soon.')">Delete account</button>
+        <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="startDeleteAccountFlow()">Delete account</button>
       </div>
 
     `;
@@ -1371,6 +1371,42 @@ function signOutUser(){
   sb.auth.signOut().then(function(){
     currentUser=null;currentProfile=null;authMode='signin';
     if(S.openTab==='account')renderPanel('account');
+  });
+}
+function startDeleteAccountFlow(){
+  if(!currentUser||!sb)return;
+  if(!confirm('Are you sure you want to delete your account?'))return;
+  const password=prompt('For your security, re-enter your password to continue:');
+  if(!password)return; // cancelled — no action taken
+  sb.auth.signInWithPassword({email:currentUser.email,password:password}).then(function(result){
+    if(result.error){
+      alert('Password incorrect — account deletion cancelled.');
+      return;
+    }
+    if(!confirm('⚠️ All your account data will be deleted forever and cannot be reversed. Continue?'))return;
+    performAccountDeletion();
+  }).catch(function(){
+    alert('Something went wrong verifying your password. Please try again.');
+  });
+}
+function performAccountDeletion(){
+  sb.auth.getSession().then(function(result){
+    const session=result.data.session;
+    if(!session){alert('Your session expired — please sign in again.');return;}
+    fetch(SUPABASE_URL+'/functions/v1/delete-account',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'}
+    }).then(function(res){return res.json();}).then(function(data){
+      if(data.error){
+        alert('Could not delete your account: '+data.error);
+      }else{
+        alert('Your account has been deleted.');
+        currentUser=null;currentProfile=null;authMode='signin';
+        if(S.openTab==='account')renderPanel('account');
+      }
+    }).catch(function(){
+      alert('Network error — could not reach the server. Please try again.');
+    });
   });
 }
 if(sb){
