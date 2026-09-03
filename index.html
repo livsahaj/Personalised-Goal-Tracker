@@ -2338,5 +2338,226 @@ function init(){
 
 init();
 </script>
+
+<!-- ── ANNOUNCEMENT FAB (draggable) ── -->
+<style>
+.ann-fab{
+  position:fixed;right:18px;bottom:63px;z-index:5500;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:grab;touch-action:none;user-select:none;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25);
+  animation:annFloat 3.2s ease-in-out infinite;
+  transition:box-shadow .15s ease;
+}
+.ann-fab:active{cursor:grabbing}
+/* Theme-inverted background — light theme gets a black FAB with a gold-tinted icon, dark theme gets a white FAB with the icon left natural */
+[data-theme="light"] .ann-fab{background:#0a0a0a;border-color:#0a0a0a}
+[data-theme="light"] .ann-fab-icon{filter:sepia(1) saturate(6) hue-rotate(-12deg) brightness(1.2)}
+[data-theme="dark"] .ann-fab{background:#ffffff;border-color:#e8e8e8}
+
+.ann-fab.dragging{animation:none;transition:none}
+.ann-fab.has-unread::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid rgba(79,142,247,0.45);
+  animation:annPulse 2.2s ease-out infinite;
+}
+[data-theme="light"] .ann-fab.has-unread::before{border-color:rgba(37,99,235,0.45)}
+@keyframes annFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes annPulse{0%{box-shadow:0 0 0 0 rgba(79,142,247,0.35)}100%{box-shadow:0 0 0 12px rgba(79,142,247,0)}}
+[data-theme="light"] .ann-fab.has-unread{animation:annFloat 3.2s ease-in-out infinite,annPulseLight 2.2s ease-out infinite}
+@keyframes annPulseLight{0%{box-shadow:0 0 0 0 rgba(37,99,235,0.35)}100%{box-shadow:0 0 0 12px rgba(37,99,235,0)}}
+.ann-badge{
+  position:absolute;top:-3px;right:-3px;
+  min-width:18px;height:18px;padding:0 4px;border-radius:9px;
+  background:var(--red);color:#fff;
+  font-size:10px;font-weight:700;font-family:var(--mono);
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--bg);pointer-events:none;
+}
+.ann-panel{
+  position:fixed;z-index:5500;
+  width:min(320px,calc(100vw - 36px));
+  max-height:60vh;overflow-y:auto;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);
+  box-shadow:0 16px 48px rgba(0,0,0,0.35);
+  display:none;flex-direction:column;
+}
+.ann-panel.open{display:flex}
+.ann-panel-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.ann-panel-title{font-size:0.88rem;font-weight:700;color:var(--text)}
+.ann-panel-close{
+  width:24px;height:24px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.ann-list{padding:0.5rem;display:flex;flex-direction:column;gap:0.4rem}
+.ann-item{
+  padding:0.7rem 0.75rem;border-radius:var(--rsm);
+  background:var(--bg3);border:1px solid var(--border);
+}
+.ann-item-title{font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:0.25rem}
+.ann-item-body{font-size:0.76rem;color:var(--text2);line-height:1.55}
+.ann-empty{padding:1.5rem 1rem;text-align:center;font-size:0.78rem;color:var(--text3)}
+.ann-reset-hint{font-size:0.66rem;color:var(--text3);text-align:center;padding:0.5rem 0.75rem 0.75rem}
+@media(max-width:640px){
+  .ann-fab{right:14px;bottom:14px;width:44px;height:44px;font-size:18px}
+}
+</style>
+
+<button class="ann-fab" id="annFab" aria-label="Announcements">
+  <span class="ann-fab-icon">📣</span>
+  <span class="ann-badge" id="annBadge" style="display:none">0</span>
+</button>
+<div class="ann-panel" id="annPanel">
+  <div class="ann-panel-hd">
+    <span class="ann-panel-title">📣 Announcements</span>
+    <button class="ann-panel-close" onclick="toggleAnnPanel()">✕</button>
+  </div>
+  <div class="ann-list" id="annList"></div>
+  <div class="ann-reset-hint">Tip: drag the icon to move it anywhere on screen</div>
+</div>
+
+<script>
+(function(){
+  var ANN_KEY='gt_ann_seen_v1';
+  var POS_KEY='gt_ann_fab_pos_v1';
+  var ANNOUNCEMENTS=[
+    {id:'ai-v1',title:'AI features on the way',body:'AI features are in development and will be introduced soon. Thank you for your patience.'},
+    {id:'welcome-v1',title:'Welcome',body:'Thanks for trying Personal Goal Tracker early. More updates are coming — stay tuned right here.'}
+  ];
+
+  function getSeen(){try{return JSON.parse(localStorage.getItem(ANN_KEY)||'[]');}catch(e){return[];}}
+  function setSeen(ids){try{localStorage.setItem(ANN_KEY,JSON.stringify(ids));}catch(e){}}
+  function unreadCount(){var seen=getSeen();return ANNOUNCEMENTS.filter(function(a){return seen.indexOf(a.id)===-1;}).length;}
+
+  function renderAnnList(){
+    var list=document.getElementById('annList');
+    if(!list)return;
+    if(!ANNOUNCEMENTS.length){list.innerHTML='<div class="ann-empty">No announcements yet.</div>';return;}
+    list.innerHTML=ANNOUNCEMENTS.map(function(a){
+      return '<div class="ann-item"><div class="ann-item-title">'+a.title+'</div><div class="ann-item-body">'+a.body+'</div></div>';
+    }).join('');
+  }
+  function refreshBadge(){
+    var n=unreadCount();
+    var badge=document.getElementById('annBadge');
+    var fab=document.getElementById('annFab');
+    if(!badge||!fab)return;
+    if(n>0){badge.style.display='flex';badge.textContent=n;fab.classList.add('has-unread');}
+    else{badge.style.display='none';fab.classList.remove('has-unread');}
+  }
+
+  // ── Panel positioning — anchors next to wherever the FAB currently is,
+  // flips above/below and left/right so it never runs off-screen ──
+  function positionPanel(){
+    var fab=document.getElementById('annFab');
+    var panel=document.getElementById('annPanel');
+    if(!fab||!panel)return;
+    var r=fab.getBoundingClientRect();
+    var pw=Math.min(320,window.innerWidth-36);
+    panel.style.width=pw+'px';
+    var ph=Math.min(window.innerHeight*0.6,420);
+    var spaceAbove=r.top, spaceBelow=window.innerHeight-r.bottom;
+    var top=(spaceAbove>ph+16||spaceAbove>spaceBelow)?Math.max(12,r.top-ph-10):r.bottom+10;
+    var left=r.left;
+    if(left+pw>window.innerWidth-12)left=window.innerWidth-pw-12;
+    if(left<12)left=12;
+    panel.style.top=top+'px';
+    panel.style.left=left+'px';
+    panel.style.bottom='auto';panel.style.right='auto';
+  }
+
+  window.toggleAnnPanel=function(){
+    var panel=document.getElementById('annPanel');
+    if(!panel)return;
+    var opening=!panel.classList.contains('open');
+    if(opening)positionPanel();
+    panel.classList.toggle('open');
+    if(opening){
+      renderAnnList();
+      setSeen(ANNOUNCEMENTS.map(function(a){return a.id;}));
+      refreshBadge();
+    }
+  };
+
+  document.addEventListener('click',function(e){
+    var panel=document.getElementById('annPanel');
+    var fab=document.getElementById('annFab');
+    if(!panel||!panel.classList.contains('open'))return;
+    if(!panel.contains(e.target)&&!fab.contains(e.target))panel.classList.remove('open');
+  });
+
+  // ── Drag to reposition — Pointer Events unify mouse + touch ──
+  function initDrag(){
+    var fab=document.getElementById('annFab');
+    if(!fab)return;
+    var dragging=false,moved=false,startX,startY,startLeft,startTop;
+
+    function clampPos(left,top){
+      var w=fab.offsetWidth,h=fab.offsetHeight;
+      return {
+        left:Math.min(Math.max(8,left),window.innerWidth-w-8),
+        top:Math.min(Math.max(8,top),window.innerHeight-h-8)
+      };
+    }
+    function applyPos(pos){
+      fab.style.left=pos.left+'px';fab.style.top=pos.top+'px';
+      fab.style.right='auto';fab.style.bottom='auto';
+    }
+    function savePos(pos){try{localStorage.setItem(POS_KEY,JSON.stringify(pos));}catch(e){}}
+    function loadPos(){try{var r=localStorage.getItem(POS_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+
+    var saved=loadPos();
+    if(saved)applyPos(clampPos(saved.left,saved.top));
+
+    fab.addEventListener('pointerdown',function(e){
+      dragging=true;moved=false;
+      var rect=fab.getBoundingClientRect();
+      startX=e.clientX;startY=e.clientY;startLeft=rect.left;startTop=rect.top;
+      fab.classList.add('dragging');
+      try{fab.setPointerCapture(e.pointerId);}catch(err){}
+    });
+    fab.addEventListener('pointermove',function(e){
+      if(!dragging)return;
+      var dx=e.clientX-startX,dy=e.clientY-startY;
+      if(Math.abs(dx)>6||Math.abs(dy)>6)moved=true;
+      if(moved){
+        var pos=clampPos(startLeft+dx,startTop+dy);
+        applyPos(pos);
+        if(document.getElementById('annPanel').classList.contains('open'))positionPanel();
+      }
+    });
+    function endDrag(e){
+      if(!dragging)return;
+      dragging=false;
+      fab.classList.remove('dragging');
+      if(moved){
+        var rect=fab.getBoundingClientRect();
+        savePos({left:rect.left,top:rect.top});
+      }else{
+        toggleAnnPanel();
+      }
+    }
+    fab.addEventListener('pointerup',endDrag);
+    fab.addEventListener('pointercancel',endDrag);
+
+    window.addEventListener('resize',function(){
+      var s=loadPos();
+      if(s)applyPos(clampPos(s.left,s.top));
+      if(document.getElementById('annPanel').classList.contains('open'))positionPanel();
+    });
+  }
+
+  function boot(){refreshBadge();initDrag();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
 </body>
 </html>
