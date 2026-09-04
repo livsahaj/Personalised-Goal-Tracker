@@ -350,41 +350,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .btn-d{border-color:var(--red2);color:var(--red)}
 .btn-d:hover{background:var(--red2)}
 .btn-g{background:transparent;border-color:transparent;color:var(--text2)}
-/* ── ACCOUNT PANEL — redesigned sections ── */
-.acc-sec{margin-bottom:1.4rem}
-.acc-sec-hd{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.75rem}
-.acc-sec-ico{font-size:0.95rem}
-.acc-sec-title{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.acc-profile-row{display:flex;align-items:center;gap:0.75rem;padding:0.8rem;background:var(--bg3);border-radius:var(--rsm);margin-bottom:0.5rem}
-.acc-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
-.acc-profile-info{min-width:0;flex:1}
-.acc-profile-name{font-size:0.88rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acc-profile-email{font-size:0.72rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acc-profile-meta{font-size:0.68rem;color:var(--text3);margin-top:0.5rem;padding-left:0.2rem}
-.acc-plan-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:0.9rem 1rem;margin-bottom:0.7rem}
-.acc-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem}
-.acc-plan-row:last-child{margin-bottom:0}
-.acc-plan-label{font-size:0.74rem;color:var(--text2)}
-.acc-plan-val{font-size:0.82rem;font-weight:600;color:var(--text)}
-.acc-plan-badge{display:inline-flex;align-items:center;gap:0.3rem;background:var(--accent2);color:var(--accent);padding:0.15rem 0.55rem;border-radius:20px;font-size:0.72rem;font-weight:700}
-.acc-plan-badge-free{background:var(--bg4);color:var(--text2)}
-.acc-upsell{font-size:0.74rem;color:var(--text2);line-height:1.55;background:var(--accent2);border-radius:var(--rsm);padding:0.65rem 0.8rem;margin-bottom:0.7rem}
-[data-theme="dark"] .acc-upsell{color:var(--text)}
-.acc-upsell a{color:var(--accent);font-weight:700;text-decoration:none}
-.acc-upsell a:hover{text-decoration:underline}
-[data-theme="dark"] .acc-upsell a{color:#8ab4ff}
-.acc-sync-row{display:flex;align-items:center;justify-content:space-between;font-size:0.72rem;color:var(--text2);margin-bottom:0.4rem;padding:0 0.1rem}
-.acc-sync-row span:last-child{font-weight:600;color:var(--text)}
-.acc-sync-note{font-size:0.68rem;color:var(--text3);line-height:1.5;margin-bottom:0.7rem;padding:0 0.1rem}
-.btn-outline-amber{background:transparent;border-color:var(--amber);color:var(--amber)}
-.btn-outline-amber:hover{background:var(--amber2)}
-.btn-outline-red{background:transparent;border-color:var(--red);color:var(--red)}
-.btn-outline-red:hover{background:var(--red2)}
-.btn-disabled-soon{background:var(--bg4);color:var(--text3);cursor:not-allowed;border-color:var(--border);position:relative}
-.soon-tag{font-size:0.6rem;font-weight:700;letter-spacing:.03em;background:var(--border2);color:var(--text2);padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.3rem}
-.acc-reset-hd{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.75rem}
-.acc-reset-title{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
-
 .btn-g:hover{background:var(--bg3);border-color:var(--border)}
 .btn-ic{width:30px;height:30px;padding:0;justify-content:center;font-size:14px}
 
@@ -689,7 +654,7 @@ canvas{display:block;width:100%!important}
    override last guarantees it always wins, regardless of where the base
    rules for these classes live or get edited in future. */
 @media(max-width:900px){
-  .hdr-nav,.hdr-about-link,.hdr-account-btn{display:none!important}
+  .hdr-nav,.hdr-about-link{display:none!important}
   .hbg-btn{display:flex!important}
 }
 </style>
@@ -706,7 +671,7 @@ canvas{display:block;width:100%!important}
   </div>
 
   <!-- About GT — sits between brand and nav -->
-  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" target="_blank" class="hdr-about-link" id="hdrAboutLink">About GT</a>
+  <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hdr-about-link" id="hdrAboutLink">About GT</a>
 
   <!-- Centre-left: nav buttons (desktop only) -->
   <nav class="hdr-nav" id="hdrNav">
@@ -745,7 +710,7 @@ canvas{display:block;width:100%!important}
       <span class="xp-num" id="xpTxt">0 / 0</span>
     </div>
     <button class="btn-th" onclick="toggleTheme()" title="Toggle theme"><span id="thIcon">☀️</span></button>
-    <button class="hdr-nav-btn hdr-account-btn" onclick="toggleTab('account',this)" style="white-space:nowrap">👤 Account</button>
+    <button class="btn-th" onclick="openSettings()" title="Settings" aria-label="Settings">⚙</button>
   </div>
   <!-- Hamburger — always rightmost -->
   <button class="hbg-btn" id="hbgBtn" onclick="openDrawer()" aria-label="Open menu">☰</button>
@@ -858,13 +823,13 @@ canvas{display:block;width:100%!important}
     <div class="sb-foot">
       <!-- About + Install -->
       <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem">
-        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="btn btn-sm btn-g" style="flex:1;text-align:center;font-size:0.72rem;text-decoration:none">📄 About GT</a>
         <button class="btn btn-sm btn-g" id="sbInstallBtn" style="flex:1;font-size:0.72rem;display:none" onclick="window._triggerInstall&&window._triggerInstall()">📲 Install</button>
       </div>
 
       <!-- Footer links -->
       <div style="display:flex;justify-content:center;gap:0.65rem;flex-wrap:wrap;padding-top:0.35rem;border-top:1px solid var(--border)">
-        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#faq" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">F.A.Q</a>
+        <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">F.A.Q</a>
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
         <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank" style="font-size:0.6rem;color:var(--text3);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--text2)'" onmouseout="this.style.color='var(--text3)'">Community</a>
         <span style="font-size:0.6rem;color:var(--text3)">·</span>
@@ -884,22 +849,36 @@ canvas{display:block;width:100%!important}
     <span>© 2026</span>
   </div>
   <div class="app-footer-center">
-    <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#faq" target="_blank">F.A.Q</a>
+    <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank">F.A.Q</a>
     <span class="app-footer-sep">|</span>
     <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">Community</a>
     <span class="app-footer-sep">|</span>
     <a href="mailto:livsahaj@gmail.com">Contact</a>
   </div>
   <div class="app-footer-right">
-    <a class="app-footer-share" href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="Share on X">𝕏</a>
-    <a class="app-footer-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="LinkedIn">in</a>
-    <a class="app-footer-share" href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" title="Reddit">r/</a>
+    <a class="app-footer-share" href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="Share on X">𝕏</a>
+    <a class="app-footer-share" href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="LinkedIn">in</a>
+    <a class="app-footer-share" href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" title="Reddit">r/</a>
     <button class="app-footer-share" id="appCopyBtn" onclick="copyAppLink()" title="Copy link">🔗</button>
   </div>
 </footer>
 </div>
 
 <!-- ── SETTINGS MODAL ── -->
+<div id="settingsModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeSettings()">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:360px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem">
+      <span style="font-size:1rem;font-weight:700;color:var(--text)">⚙ Settings</span>
+      <button class="btn btn-ic btn-g" onclick="closeSettings()">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem">
+      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--amber);color:var(--amber)" onclick="confirmResetStreak()">Reset Streak</button>
+      <button class="btn btn-sm" style="width:100%;justify-content:center;border:1px solid var(--red);color:var(--red)" onclick="confirmResetData()">Reset All Data</button>
+    </div>
+    <div style="font-size:0.72rem;color:var(--text3);margin-top:0.85rem;line-height:1.6">Reset Streak clears your current streak count only. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
+  </div>
+</div>
+
 <!-- ── SHARE MODAL ── -->
 <div id="shareModal" style="display:none;position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center" onclick="if(event.target===this)closeShare()">
   <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:1.5rem;max-width:340px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
@@ -908,9 +887,9 @@ canvas{display:block;width:100%!important}
       <button class="btn btn-ic btn-g" onclick="closeShare()">✕</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
-      <a href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:var(--text)">X</a>
-      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#0A66C2">in LinkedIn</a>
-      <a href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#FF4500">r/ Reddit</a>
+      <a href="https://twitter.com/intent/tweet?text=Personal+Goal+Tracker+%E2%80%94+livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:var(--text)">X</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#0A66C2">in LinkedIn</a>
+      <a href="https://www.reddit.com/submit?url=https://livsahaj.github.io/Personalised-Goal-Tracker/index.html" target="_blank" class="btn btn-sm btn-g" style="justify-content:center;text-decoration:none;font-weight:700;color:#FF4500">r/ Reddit</a>
       <button class="btn btn-sm btn-g" style="justify-content:center;font-weight:600;color:var(--text2)" onclick="copyAppLink()">Copy link</button>
     </div>
   </div>
@@ -930,18 +909,11 @@ canvas{display:block;width:100%!important}
     <div class="hbg-tab" onclick="drawerTab('focus')"><div class="hbg-ico">🎯</div><span class="hbg-lbl">Focus</span></div>
     <div class="hbg-tab" onclick="drawerTab('coach')"><div class="hbg-ico">🧠</div><span class="hbg-lbl">Life Coach</span></div>
     <div class="hbg-tab" onclick="drawerTab('progress')"><div class="hbg-ico">📈</div><span class="hbg-lbl">Progress</span></div>
-    <div class="hbg-tab" onclick="toggleDrawerReports(event)" style="justify-content:space-between">
-      <span style="display:flex;align-items:center;gap:0.65rem"><span class="hbg-ico">📊</span><span class="hbg-lbl">Reports</span></span>
-      <span id="drawerReportsCaret" style="font-size:0.7rem;color:var(--text3);transition:transform .2s ease">▾</span>
-    </div>
-    <div id="drawerReportsSub" style="display:none">
-      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
-      <div class="hbg-tab" style="padding-left:2.4rem" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
-    </div>
+    <div class="hbg-tab" onclick="drawerTab('weekly')"><div class="hbg-ico">📋</div><span class="hbg-lbl">Weekly Report</span></div>
+    <div class="hbg-tab" onclick="drawerTab('monthly')"><div class="hbg-ico">🗓</div><span class="hbg-lbl">Monthly Report</span></div>
     <div class="hbg-tab" onclick="drawerTab('ranks')"><div class="hbg-ico">🎖</div><span class="hbg-lbl">About Ranks</span></div>
-    <div class="hbg-tab" onclick="drawerTab('account')"><div class="hbg-ico">👤</div><span class="hbg-lbl">Account</span></div>
     <div class="hbg-tab-sep"></div>
-    <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/" target="_blank" class="hbg-tab hbg-tab-link">
+    <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html" target="_blank" class="hbg-tab hbg-tab-link">
       <div class="hbg-ico">📄</div><span class="hbg-lbl">About GT</span>
     </a>
     <button class="hbg-tab hbg-tab-link" style="width:100%;text-align:left;border:none;background:none;cursor:pointer" onclick="closeDrawer();openShare()">
@@ -953,7 +925,7 @@ canvas{display:block;width:100%!important}
   </div>
   <div class="hbg-foot">
     <div class="hbg-foot-links">
-      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#faq" target="_blank">F.A.Q</a>
+      <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/landing.html#faq" target="_blank">F.A.Q</a>
       <span class="hbg-foot-sep">·</span>
       <a href="https://github.com/livsahaj/Personalised-Goal-Tracker/discussions" target="_blank">Community</a>
     </div>
@@ -1043,334 +1015,6 @@ canvas{display:block;width:100%!important}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// ═══════════════════════════════════════════
-// SUPABASE CONNECTION — step 1: connect only, no UI yet
-// If offline or CDN fails to load, this fails silently —
-// the rest of the app (local-only free tier) keeps working regardless.
-// ═══════════════════════════════════════════
-const SUPABASE_URL = 'https://zspanmkkohakufdgynaq.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_a9BUn99yPJxzq314suYFEw_ONpgZzqr';
-let sb = null;
-try {
-  if (typeof window.supabase !== 'undefined') {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    console.log('[Supabase] Client initialized');
-  } else {
-    console.warn('[Supabase] Library did not load — likely offline. App continues in local-only mode.');
-  }
-} catch (e) {
-  console.warn('[Supabase] Failed to initialize:', e.message);
-}
-
-// ═══════════════════════════════════════════
-// ACCOUNT — auth state + panel content
-// ═══════════════════════════════════════════
-let currentUser=null;
-let currentProfile=null;
-
-async function refreshAuthState(){
-  if(!sb)return;
-  try{
-    const {data:{session}}=await sb.auth.getSession();
-    if(session&&session.user){
-      currentUser=session.user;
-      let {data:profile,error:selectErr}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
-      if(selectErr)console.warn('[Account] Profile fetch error:',selectErr.message);
-      if(!profile){
-        const meta=currentUser.user_metadata||{};
-        const {data:newProfile,error:insertErr}=await sb.from('profiles').insert({id:currentUser.id,email:currentUser.email,tier:'free',first_name:meta.first_name||null,last_name:meta.last_name||null}).select().single();
-        if(insertErr)console.warn('[Account] Profile creation failed — likely a missing INSERT policy on the profiles table in Supabase:',insertErr.message);
-        profile=newProfile;
-      }
-      currentProfile=profile;
-    }else{
-      currentUser=null;
-      currentProfile=null;
-    }
-  }catch(e){
-    console.warn('[Account] Failed to refresh auth state:',e.message);
-    currentUser=null;currentProfile=null;
-  }
-  if(S.openTab==='account')renderPanel('account');
-}
-
-let authMode='signin'; // 'signin' | 'signup' | 'forgot' | 'newpassword'
-
-function switchAuthMode(mode){
-  authMode=mode;
-  if(S.openTab==='account')renderPanel('account');
-}
-
-function buildAccount(){
-  let html='<div style="padding:0.25rem 0 1rem">';
-
-  if(currentUser&&currentProfile){
-    const joinedOn=currentProfile.created_at?new Date(currentProfile.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';
-    const tier=currentProfile.tier||'free';
-    const tierLabel=tier.charAt(0).toUpperCase()+tier.slice(1);
-    const hasName=currentProfile.first_name&&currentProfile.last_name;
-    const initials=hasName?(currentProfile.first_name[0]+currentProfile.last_name[0]).toUpperCase():(currentUser.email||'?').slice(0,2).toUpperCase();
-    const displayName=hasName?`${currentProfile.first_name} ${currentProfile.last_name}`:currentUser.email.split('@')[0];
-    const renewsOn=currentProfile.renews_at?new Date(currentProfile.renews_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):null;
-
-    let upsellHtml='';
-    if(tier==='free'){
-      upsellHtml=`<div class="acc-upsell">You're on the Free tier. Upgrade to <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Pro</a> or <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Max</a> to unlock the perks.</div>`;
-    }else if(tier==='pro'){
-      upsellHtml=`<div class="acc-upsell">You're on the Pro tier. Upgrade to <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing" target="_blank">Max</a> to use Max perks.</div>`;
-    }
-
-    html+=`
-      <div class="acc-sec">
-        <div class="acc-sec-hd"><span class="acc-sec-ico">👤</span><span class="acc-sec-title">Profile</span></div>
-        <div class="acc-profile-row">
-          <div class="acc-avatar">${initials}</div>
-          <div class="acc-profile-info">
-            <div class="acc-profile-name">${displayName}</div>
-            <div class="acc-profile-email">${currentUser.email}</div>
-          </div>
-        </div>
-        <div class="acc-profile-meta">Joined on ${joinedOn}</div>
-      </div>
-
-      <div class="acc-sec">
-        <div class="acc-sec-hd"><span class="acc-sec-ico">💳</span><span class="acc-sec-title">Plan details</span></div>
-        <div class="acc-plan-card">
-          <div class="acc-plan-row">
-            <span class="acc-plan-label">Current plan</span>
-            <span class="acc-plan-badge${tier==='free'?' acc-plan-badge-free':''}">${tierLabel}</span>
-          </div>
-          ${renewsOn?`<div class="acc-plan-row"><span class="acc-plan-label">Renews on</span><span class="acc-plan-val">${renewsOn}</span></div>`:''}
-        </div>
-        ${upsellHtml}
-        ${tier!=='max'?'<button class="btn btn-sm btn-p" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="window.open(\'https://livsahaj.github.io/Personalised-Goal-Tracker/#pricing\',\'_blank\')">Upgrade plan</button>':''}
-        ${tier!=='free'?'<button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center" onclick="alert(\'Contact support to cancel — this will be self-serve soon.\')">End membership</button>':''}
-      </div>
-
-      <div class="acc-sec">
-        <div class="acc-sec-hd"><span class="acc-sec-ico">🗄️</span><span class="acc-sec-title">Account data</span></div>
-        <div class="acc-sync-row"><span>Last synced</span><span>Never</span></div>
-        <div class="acc-sync-note">Cloud sync isn't available yet. Once live, this will show a real date and time — e.g., 3 Sept 2026, 2:45 PM.</div>
-        <button class="btn btn-sm btn-disabled-soon" style="width:100%;justify-content:center;margin-bottom:0.5rem" disabled>Sync data <span class="soon-tag">SOON</span></button>
-        <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;border:1px solid var(--border2)" onclick="signOutUser()">Sign out</button>
-        <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="startDeleteAccountFlow()">Delete account</button>
-      </div>
-
-    `;
-  }else if(authMode==='newpassword'){
-    html+=`
-      <div class="sec-lbl" style="margin-bottom:0.5rem">Set a new password</div>
-      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">You followed a reset link — choose a new password below.</div>
-      <div style="position:relative;margin-bottom:0.5rem">
-        <input type="password" id="authNewPassword" placeholder="New password (min 6 characters)" onkeydown="if(event.key==='Enter')submitNewPassword()" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
-        <button type="button" onclick="togglePwVisibility('authNewPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
-      </div>
-      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="submitNewPassword()" id="newPasswordBtn">Set new password</button>
-      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
-    `;
-  }else if(authMode==='forgot'){
-    html+=`
-      <div class="sec-lbl" style="margin-bottom:0.5rem">Reset your password</div>
-      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">We'll email you a link to set a new password.</div>
-      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')requestPasswordReset()" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
-      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="requestPasswordReset()" id="resetReqBtn">Send reset link</button>
-      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
-      <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode('signin')">← Back to sign in</button>
-    `;
-  }else{
-    const isSignup=authMode==='signup';
-    html+=`
-      <div class="sec-lbl" style="margin-bottom:0.5rem">Account</div>
-      <div style="display:flex;gap:0.4rem;margin-bottom:0.85rem">
-        <button class="btn btn-sm ${!isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signin')">Sign In</button>
-        <button class="btn btn-sm ${isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signup')">Sign Up</button>
-      </div>
-      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — free tier included.</div>
-      ${isSignup?`<div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
-        <input type="text" id="authFirstName" placeholder="First name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
-        <input type="text" id="authLastName" placeholder="Last name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
-      </div>`:''}
-      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
-      <div style="position:relative;margin-bottom:0.5rem">
-        <input type="password" id="authPassword" placeholder="Password (min 6 characters)" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
-        <button type="button" onclick="togglePwVisibility('authPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
-      </div>
-      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="${isSignup?'signUpWithPassword()':'signInWithPassword()'}" id="authSubmitBtn">${isSignup?'Create account':'Sign in'}</button>
-      ${!isSignup?'<button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode(\'forgot\')">Forgot password?</button>':''}
-      <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
-    `;
-  }
-
-  html+=`
-    <hr style="border:none;border-top:1px solid var(--border);margin:1.25rem 0">
-    <div class="acc-reset-hd"><span class="acc-sec-ico">⚠️</span><span class="acc-reset-title">Reset</span></div>
-    <button class="btn btn-sm btn-outline-amber" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="confirmResetStreak()">Reset Streak</button>
-    <button class="btn btn-sm btn-outline-red" style="width:100%;justify-content:center" onclick="confirmResetData()">Reset All Data</button>
-    <div style="font-size:0.7rem;color:var(--text3);margin-top:0.6rem;line-height:1.5">These act on this device's local data regardless of sign-in status. Reset All Data permanently wipes every task, history entry, and journal note — this cannot be undone.</div>
-  </div>`;
-
-  return html;
-}
-
-function signInWithPassword(){
-  const email=(document.getElementById('authEmail').value||'').trim();
-  const password=document.getElementById('authPassword').value||'';
-  const msgEl=document.getElementById('authMsg');
-  const btn=document.getElementById('authSubmitBtn');
-  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
-  if(!password){msgEl.textContent='Enter your password.';msgEl.style.color='var(--red)';return;}
-  if(!sb){msgEl.textContent='Sign-in unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
-  btn.disabled=true;btn.textContent='Signing in...';msgEl.textContent='';
-  sb.auth.signInWithPassword({email:email,password:password}).then(function(result){
-    btn.disabled=false;btn.textContent='Sign in';
-    if(result.error){
-      msgEl.textContent=result.error.message;
-      msgEl.style.color='var(--red)';
-    }
-    // success — onAuthStateChange fires refreshAuthState() and re-renders automatically
-  }).catch(function(){
-    btn.disabled=false;btn.textContent='Sign in';
-    msgEl.textContent='Network error — try again.';
-    msgEl.style.color='var(--red)';
-  });
-}
-function signUpWithPassword(){
-  const firstNameEl=document.getElementById('authFirstName');
-  const lastNameEl=document.getElementById('authLastName');
-  const firstName=(firstNameEl&&firstNameEl.value||'').trim();
-  const lastName=(lastNameEl&&lastNameEl.value||'').trim();
-  const email=(document.getElementById('authEmail').value||'').trim();
-  const password=document.getElementById('authPassword').value||'';
-  const msgEl=document.getElementById('authMsg');
-  const btn=document.getElementById('authSubmitBtn');
-  if(!firstName){msgEl.textContent='Enter your first name.';msgEl.style.color='var(--red)';return;}
-  if(!lastName){msgEl.textContent='Enter your last name.';msgEl.style.color='var(--red)';return;}
-  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
-  if(!password||password.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
-  if(!sb){msgEl.textContent='Sign-up unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
-  btn.disabled=true;btn.textContent='Creating account...';msgEl.textContent='';
-  sb.auth.signUp({email:email,password:password,options:{data:{first_name:firstName,last_name:lastName}}}).then(function(result){
-    btn.disabled=false;btn.textContent='Create account';
-    if(result.error){
-      msgEl.textContent=result.error.message;
-      msgEl.style.color='var(--red)';
-    }else if(result.data&&result.data.user&&!result.data.session){
-      msgEl.textContent='Account created — check your inbox to confirm your email before signing in.';
-      msgEl.style.color='var(--green)';
-    }
-    // if session came back immediately (email confirmation off), onAuthStateChange handles the rest
-  }).catch(function(){
-    btn.disabled=false;btn.textContent='Create account';
-    msgEl.textContent='Network error — try again.';
-    msgEl.style.color='var(--red)';
-  });
-}
-function requestPasswordReset(){
-  const email=(document.getElementById('authEmail').value||'').trim();
-  const msgEl=document.getElementById('authMsg');
-  const btn=document.getElementById('resetReqBtn');
-  if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
-  if(!sb){msgEl.textContent='Unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
-  btn.disabled=true;btn.textContent='Sending...';msgEl.textContent='';
-  sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href}).then(function(result){
-    btn.disabled=false;btn.textContent='Send reset link';
-    if(result.error){
-      msgEl.textContent=result.error.message;
-      msgEl.style.color='var(--red)';
-    }else{
-      msgEl.textContent='Check your inbox — we sent a password reset link to '+email;
-      msgEl.style.color='var(--green)';
-    }
-  }).catch(function(){
-    btn.disabled=false;btn.textContent='Send reset link';
-    msgEl.textContent='Network error — try again.';
-    msgEl.style.color='var(--red)';
-  });
-}
-function submitNewPassword(){
-  const newPassword=document.getElementById('authNewPassword').value||'';
-  const msgEl=document.getElementById('authMsg');
-  const btn=document.getElementById('newPasswordBtn');
-  if(!newPassword||newPassword.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
-  if(!sb)return;
-  btn.disabled=true;btn.textContent='Saving...';msgEl.textContent='';
-  sb.auth.updateUser({password:newPassword}).then(function(result){
-    btn.disabled=false;btn.textContent='Set new password';
-    if(result.error){
-      msgEl.textContent=result.error.message;
-      msgEl.style.color='var(--red)';
-    }else{
-      authMode='signin';
-      msgEl.textContent='Password updated — you are now signed in.';
-      msgEl.style.color='var(--green)';
-      refreshAuthState();
-    }
-  }).catch(function(){
-    btn.disabled=false;btn.textContent='Set new password';
-    msgEl.textContent='Network error — try again.';
-    msgEl.style.color='var(--red)';
-  });
-}
-function togglePwVisibility(inputId,btn){
-  const input=document.getElementById(inputId);
-  if(!input)return;
-  if(input.type==='password'){input.type='text';btn.textContent='🙈';}
-  else{input.type='password';btn.textContent='👁';}
-}
-function signOutUser(){
-  if(!sb)return;
-  sb.auth.signOut().then(function(){
-    currentUser=null;currentProfile=null;authMode='signin';
-    if(S.openTab==='account')renderPanel('account');
-  });
-}
-function startDeleteAccountFlow(){
-  if(!currentUser||!sb)return;
-  if(!confirm('Are you sure you want to delete your account?'))return;
-  const password=prompt('For your security, re-enter your password to continue:');
-  if(!password)return; // cancelled — no action taken
-  sb.auth.signInWithPassword({email:currentUser.email,password:password}).then(function(result){
-    if(result.error){
-      alert('Password incorrect — account deletion cancelled.');
-      return;
-    }
-    if(!confirm('⚠️ All your account data will be deleted forever and cannot be reversed. Continue?'))return;
-    performAccountDeletion();
-  }).catch(function(){
-    alert('Something went wrong verifying your password. Please try again.');
-  });
-}
-function performAccountDeletion(){
-  sb.auth.getSession().then(function(result){
-    const session=result.data.session;
-    if(!session){alert('Your session expired — please sign in again.');return;}
-    fetch(SUPABASE_URL+'/functions/v1/delete-account',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'}
-    }).then(function(res){return res.json();}).then(function(data){
-      if(data.error){
-        alert('Could not delete your account: '+data.error);
-      }else{
-        alert('Your account has been deleted.');
-        currentUser=null;currentProfile=null;authMode='signin';
-        if(S.openTab==='account')renderPanel('account');
-      }
-    }).catch(function(){
-      alert('Network error — could not reach the server. Please try again.');
-    });
-  });
-}
-if(sb){
-  sb.auth.onAuthStateChange(function(event){
-    if(event==='PASSWORD_RECOVERY')authMode='newpassword';
-    refreshAuthState();
-  });
-  refreshAuthState();
-}
-
-</script>
 <script>
 // ═══════════════════════════════════════════
 // CONSTANTS
@@ -1386,7 +1030,7 @@ const RANKS=[
   {name:'Master',min:365,max:549},{name:'Grand Master',min:550,max:999},
   {name:'Sovereign',min:1000,max:1499},{name:'Legend',min:1500,max:Infinity}
 ];
-const TITLES={focus:'Focus',coach:'Life Coach',progress:'Progress Charts',weekly:'Weekly Report',monthly:'Monthly Report',ranks:'About Ranks',account:'Account'};
+const TITLES={focus:'Focus',coach:'Life Coach',progress:'Progress Charts',weekly:'Weekly Report',monthly:'Monthly Report',ranks:'About Ranks'};
 const TODAY=()=>new Date().toISOString().slice(0,10);
 
 // ═══════════════════════════════════════════
@@ -1441,7 +1085,7 @@ function syncHdrNav(tabId){
 }
 
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeDrawer();closeShare();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeDrawer();closeSettings();closeShare();}});
 
 // ── HAMBURGER DRAWER ──────────────────────────────────────────
 function openDrawer(){
@@ -1468,19 +1112,15 @@ function syncDrawerState(){
     });
   }
 }
-function toggleDrawerReports(e){
-  e.stopPropagation();
-  const sub=document.getElementById('drawerReportsSub');
-  const caret=document.getElementById('drawerReportsCaret');
-  if(!sub)return;
-  const open=sub.style.display==='none';
-  sub.style.display=open?'block':'none';
-  if(caret)caret.style.transform=open?'rotate(180deg)':'rotate(0deg)';
-}
 function drawerTab(id){
   closeDrawer();
-  // Directly opens the panel — no longer depends on a hidden legacy element existing
-  setTimeout(function(){toggleTab(id);},120);
+  // Small delay so drawer closes visually before panel opens
+  setTimeout(function(){
+    const tabs=document.querySelectorAll('.tab-i');
+    let found=null;
+    tabs.forEach(function(t){if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))found=t;});
+    if(found)found.click();
+  },120);
 }
 // Also show install in drawer when prompt fires
 window.addEventListener('beforeinstallprompt',function(){
@@ -1503,7 +1143,8 @@ function copyAppLink(){
 }
 
 // ── SETTINGS MODAL ──────────────────────────────────────────
-
+function openSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='flex';}
+function closeSettings(){const m=document.getElementById('settingsModal');if(m)m.style.display='none';}
 
 // ── SHARE MODAL ──────────────────────────────────────────
 function openShare(){const m=document.getElementById('shareModal');if(m)m.style.display='flex';}
@@ -1707,7 +1348,6 @@ function renderPanel(id){
     else if(id==='weekly'){el.innerHTML=buildWeekly();renderWeeklyRep();}
     else if(id==='monthly'){el.innerHTML=buildMonthly();renderMonthlyRep();}
     else if(id==='ranks') el.innerHTML=buildRanks();
-    else if(id==='account') el.innerHTML=buildAccount();
   }catch(e){console.warn('Panel render error ['+id+']:',e);}
 }
 
@@ -2673,6 +2313,7 @@ function confirmResetStreak(){
   if(!confirm('Reset your streak to 0? This cannot be undone.'))return;
   S.streak=0;S.lastActive=null;
   save();renderAll();toast('Streak reset to 0.');
+  closeSettings();
 }
 function confirmResetData(){
   if(!confirm('Reset ALL data? This permanently deletes every task, history entry, journal note, and streak — everything. This cannot be undone.'))return;
@@ -2683,6 +2324,7 @@ function confirmResetData(){
   save();renderAll();
   if(S.openTab)closePanel();
   toast('All data cleared. Starting fresh.');
+  closeSettings();
 }
 
 // ═══════════════════════════════════════════
