@@ -1070,6 +1070,7 @@ try {
 let currentUser=null;
 let currentProfile=null;
 let justDeletedAccount=false;
+let justPasswordReset=false;
 let accountView='main'; // 'main' | 'managePlan' — paid users get routed to managePlan on delete click
 
 async function refreshAuthState(){
@@ -1245,6 +1246,16 @@ function buildAccount(){
       </div>
 
     `;
+  }else if(authMode==='linkExpired'){
+    const errMsg=window.__authLinkErrorMsg||'This link is invalid or has expired.';
+    html+=`
+      <div style="text-align:center;padding:2rem 1rem 1rem">
+        <div style="font-size:1.8rem;margin-bottom:0.75rem">⚠️</div>
+        <div style="font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:0.5rem">Link expired</div>
+        <div style="font-size:0.8rem;color:var(--text2);line-height:1.6;margin-bottom:1.25rem">${errMsg}. Links are one-time use and expire after a short period — please request a new one.</div>
+      </div>
+      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="authMode='signin';renderPanel('account')">Back to sign in</button>
+    `;
   }else if(authMode==='newpassword'){
     html+=`
       <div class="sec-lbl" style="margin-bottom:0.5rem">Set a new password</div>
@@ -1273,6 +1284,7 @@ function buildAccount(){
         <button class="btn btn-sm ${!isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signin')">Sign In</button>
         <button class="btn btn-sm ${isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signup')">Sign Up</button>
       </div>
+      ${justPasswordReset?(function(){justPasswordReset=false;return '<div style="font-size:0.78rem;color:var(--green);background:var(--bg3);border-radius:var(--rsm);padding:0.6rem 0.75rem;margin-bottom:0.75rem;line-height:1.5">✓ Password updated. Please sign in with your new password.</div>';})():''}
       <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — free tier included.</div>
       ${isSignup?`<div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
         <input type="text" id="authFirstName" placeholder="First name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
@@ -1388,16 +1400,20 @@ function submitNewPassword(){
   if(!sb)return;
   btn.disabled=true;btn.textContent='Saving...';msgEl.textContent='';
   sb.auth.updateUser({password:newPassword}).then(function(result){
-    btn.disabled=false;btn.textContent='Set new password';
     if(result.error){
+      btn.disabled=false;btn.textContent='Set new password';
       msgEl.textContent=result.error.message;
       msgEl.style.color='var(--red)';
-    }else{
-      authMode='signin';
-      msgEl.textContent='Password updated — you are now signed in.';
-      msgEl.style.color='var(--green)';
-      refreshAuthState();
+      return;
     }
+    // Password changed successfully — sign out and require a fresh sign-in,
+    // rather than silently staying logged in from the recovery session.
+    sb.auth.signOut().then(function(){
+      currentUser=null;currentProfile=null;
+      authMode='signin';
+      justPasswordReset=true;
+      if(S.openTab==='account')renderPanel('account');
+    });
   }).catch(function(){
     btn.disabled=false;btn.textContent='Set new password';
     msgEl.textContent='Network error — try again.';
@@ -2880,6 +2896,22 @@ function init(){
 
   renderAll();
   setInterval(saveHistory,60000);
+
+  // Detect arrival from an email link (recovery or an expired/invalid link) by reading
+  // the URL directly — the async onAuthStateChange event can fire before we're listening,
+  // so this check has no timing dependency at all.
+  var urlState=window.location.hash+window.location.search;
+  if(urlState.indexOf('type=recovery')>-1){
+    authMode='newpassword';
+    var accBtn=document.querySelector('.hdr-account-btn');
+    toggleTab('account',accBtn||null);
+  }else if(urlState.indexOf('error_code=')>-1||urlState.indexOf('error=')>-1){
+    var errMatch=urlState.match(/error_description=([^&]+)/);
+    window.__authLinkErrorMsg=errMatch?decodeURIComponent(errMatch[1].replace(/\+/g,' ')):'This link is invalid or has expired.';
+    authMode='linkExpired';
+    var accBtn2=document.querySelector('.hdr-account-btn');
+    toggleTab('account',accBtn2||null);
+  }
 }
 
 init();
