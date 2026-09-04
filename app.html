@@ -1399,25 +1399,36 @@ function submitNewPassword(){
   if(!newPassword||newPassword.length<6){msgEl.textContent='Password must be at least 6 characters.';msgEl.style.color='var(--red)';return;}
   if(!sb)return;
   btn.disabled=true;btn.textContent='Saving...';msgEl.textContent='';
-  sb.auth.updateUser({password:newPassword}).then(function(result){
-    if(result.error){
+  // The Supabase client parses the recovery link's tokens asynchronously right after page load —
+  // if submitted too quickly, that can still be in progress. Confirm a real session exists first,
+  // so a fast click gives a clear "try again" message instead of a cryptic auth error.
+  sb.auth.getSession().then(function(sessionResult){
+    if(!sessionResult.data||!sessionResult.data.session){
       btn.disabled=false;btn.textContent='Set new password';
-      msgEl.textContent=result.error.message;
-      msgEl.style.color='var(--red)';
+      msgEl.textContent='Still verifying your reset link — please wait a moment and try again.';
+      msgEl.style.color='var(--amber)';
       return;
     }
-    // Password changed successfully — sign out and require a fresh sign-in,
-    // rather than silently staying logged in from the recovery session.
-    sb.auth.signOut().then(function(){
-      currentUser=null;currentProfile=null;
-      authMode='signin';
-      justPasswordReset=true;
-      if(S.openTab==='account')renderPanel('account');
+    sb.auth.updateUser({password:newPassword}).then(function(result){
+      if(result.error){
+        btn.disabled=false;btn.textContent='Set new password';
+        msgEl.textContent=result.error.message;
+        msgEl.style.color='var(--red)';
+        return;
+      }
+      // Password changed successfully — sign out and require a fresh sign-in,
+      // rather than silently staying logged in from the recovery session.
+      sb.auth.signOut().then(function(){
+        currentUser=null;currentProfile=null;
+        authMode='signin';
+        justPasswordReset=true;
+        if(S.openTab==='account')renderPanel('account');
+      });
+    }).catch(function(){
+      btn.disabled=false;btn.textContent='Set new password';
+      msgEl.textContent='Network error — try again.';
+      msgEl.style.color='var(--red)';
     });
-  }).catch(function(){
-    btn.disabled=false;btn.textContent='Set new password';
-    msgEl.textContent='Network error — try again.';
-    msgEl.style.color='var(--red)';
   });
 }
 function togglePwVisibility(inputId,btn){
