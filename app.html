@@ -1348,7 +1348,7 @@ function signUpWithPassword(){
       msgEl.textContent='This email was registered before. Please sign in.';
       msgEl.style.color='var(--red)';
     }else if(result.data&&result.data.user&&!result.data.session){
-      msgEl.textContent='Account created — check your inbox to confirm your email before signing in.';
+      msgEl.textContent='Account created — check your inbox to confirm your email. Also check your Spam/Junk folder, just in case.';
       msgEl.style.color='var(--green)';
     }
     // if session came back immediately (email confirmation off), onAuthStateChange handles the rest
@@ -1371,7 +1371,7 @@ function requestPasswordReset(){
       msgEl.textContent=result.error.message;
       msgEl.style.color='var(--red)';
     }else{
-      msgEl.textContent='Check your inbox — we sent a password reset link to '+email;
+      msgEl.textContent='Check your inbox — we sent a password reset link to '+email+'. Also check your Spam/Junk folder, just in case.';
       msgEl.style.color='var(--green)';
     }
   }).catch(function(){
@@ -1467,7 +1467,13 @@ function performAccountDeletion(){
 }
 if(sb){
   sb.auth.onAuthStateChange(function(event){
-    if(event==='PASSWORD_RECOVERY')authMode='newpassword';
+    if(event==='PASSWORD_RECOVERY'){
+      authMode='newpassword';
+      // Don't make the user hunt for this — force the Account panel open so the
+      // "set new password" form is immediately visible, not silently waiting unseen.
+      var accBtn=document.querySelector('.hdr-account-btn')||document.querySelector('[onclick*="toggleTab(\'account\'"]');
+      toggleTab('account',accBtn||null);
+    }
     refreshAuthState();
   });
   refreshAuthState();
