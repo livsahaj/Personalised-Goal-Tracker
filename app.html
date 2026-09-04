@@ -379,10 +379,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100%;
 .btn-outline-amber{background:transparent;border-color:var(--amber);color:var(--amber)}
 .btn-outline-amber:hover{background:var(--amber2)}
 .btn-outline-red{background:transparent;border-color:var(--red);color:var(--red)}
-.pw-check{display:flex;align-items:center;gap:0.45rem;font-size:0.74rem;color:var(--text3);transition:color .15s ease}
+.pw-check{display:flex;align-items:center;gap:0.45rem;font-size:0.74rem;color:var(--text3);transition:color .15s ease,font-weight .15s ease}
 .pw-check .pw-check-dot{font-size:0.7rem;width:14px;text-align:center;flex-shrink:0}
-.pw-check[data-state="valid"]{color:var(--green)}
+.pw-check[data-state="valid"]{color:var(--green);font-weight:600}
 .pw-check[data-state="invalid"]{color:var(--text3)}
+input[type="password"]{font-size:1.05rem!important;letter-spacing:0.5px}
 .btn-outline-red:hover{background:var(--red2)}
 .btn-disabled-soon{background:var(--bg4);color:var(--text3);cursor:not-allowed;border-color:var(--border);position:relative}
 .soon-tag{font-size:0.6rem;font-weight:700;letter-spacing:.03em;background:var(--border2);color:var(--text2);padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.3rem}
@@ -1124,6 +1125,15 @@ function updatePwChecklist(){
   setCheckState('pwCheckMatch',pw.length>0&&pw===confirmPw);
   // "Not previous password" can only be confirmed with a network check — stays pending until Set new password is clicked
 }
+function updateSignupPwChecklist(){
+  const pw=document.getElementById('authPassword')?document.getElementById('authPassword').value:'';
+  const confirmPw=document.getElementById('authPasswordConfirm')?document.getElementById('authPasswordConfirm').value:'';
+  setCheckState('sigCheckUpper',/[A-Z]/.test(pw));
+  setCheckState('sigCheckLower',/[a-z]/.test(pw));
+  setCheckState('sigCheckNumber',/[0-9]/.test(pw));
+  setCheckState('sigCheckLength',pw.length>=8);
+  setCheckState('sigCheckMatch',pw.length>0&&pw===confirmPw);
+}
 function validatePasswordStrength(pw){
   if(!pw||pw.length<8)return 'Password must be at least 8 characters.';
   if(!/[a-z]/.test(pw))return 'Password must include a lowercase letter.';
@@ -1338,9 +1348,20 @@ function buildAccount(){
       </div>`:''}
       <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
       <div style="position:relative;margin-bottom:0.5rem">
-        <input type="password" id="authPassword" placeholder="Password (8+ chars, upper/lower/digit)" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <input type="password" id="authPassword" placeholder="Password (8+ chars, upper/lower/digit)" oninput="${isSignup?'updateSignupPwChecklist()':''}" onkeydown="if(event.key==='Enter')${isSignup?"document.getElementById('authPasswordConfirm').focus()":'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
         <button type="button" onclick="togglePwVisibility('authPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
       </div>
+      ${isSignup?`<div style="position:relative;margin-bottom:0.7rem">
+        <input type="password" id="authPasswordConfirm" placeholder="Re-enter password" oninput="updateSignupPwChecklist()" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <button type="button" onclick="togglePwVisibility('authPasswordConfirm',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
+      </div>
+      <div id="signupPwChecklist" style="background:var(--bg3);border-radius:var(--rsm);padding:0.65rem 0.8rem;margin-bottom:0.85rem;display:flex;flex-direction:column;gap:0.35rem">
+        <div class="pw-check" id="sigCheckUpper" data-state="pending"><span class="pw-check-dot">○</span><span>Contains an uppercase letter</span></div>
+        <div class="pw-check" id="sigCheckLower" data-state="pending"><span class="pw-check-dot">○</span><span>Contains a lowercase letter</span></div>
+        <div class="pw-check" id="sigCheckNumber" data-state="pending"><span class="pw-check-dot">○</span><span>Contains a number</span></div>
+        <div class="pw-check" id="sigCheckLength" data-state="pending"><span class="pw-check-dot">○</span><span>At least 8 characters</span></div>
+        <div class="pw-check" id="sigCheckMatch" data-state="pending"><span class="pw-check-dot">○</span><span>Both passwords match</span></div>
+      </div>`:''}
       <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="${isSignup?'signUpWithPassword()':'signInWithPassword()'}" id="authSubmitBtn">${isSignup?'Create account':'Sign in'}</button>
       ${!isSignup?'<button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode(\'forgot\')">Forgot password?</button>':''}
       <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
@@ -1394,6 +1415,8 @@ function signUpWithPassword(){
   if(!email||!email.includes('@')){msgEl.textContent='Enter a valid email.';msgEl.style.color='var(--red)';return;}
   const pwError=validatePasswordStrength(password);
   if(pwError){msgEl.textContent=pwError;msgEl.style.color='var(--red)';return;}
+  const confirmPassword=document.getElementById('authPasswordConfirm').value||'';
+  if(password!==confirmPassword){msgEl.textContent='Passwords do not match.';msgEl.style.color='var(--red)';return;}
   if(!sb){msgEl.textContent='Sign-up unavailable right now — check your connection.';msgEl.style.color='var(--red)';return;}
   btn.disabled=true;btn.textContent='Creating account...';msgEl.textContent='';
   sb.auth.signUp({email:email,password:password,options:{data:{first_name:firstName,last_name:lastName},emailRedirectTo:window.location.href}}).then(function(result){
