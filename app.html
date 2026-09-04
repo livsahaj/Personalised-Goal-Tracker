@@ -1433,26 +1433,43 @@ function submitNewPassword(){
   // if submitted too quickly, that can still be in progress. Confirm a real session exists first,
   // so a fast click gives a clear "try again" message instead of a cryptic auth error.
   sb.auth.getSession().then(function(sessionResult){
-    if(!sessionResult.data||!sessionResult.data.session){
+    const session=sessionResult.data&&sessionResult.data.session;
+    if(!session){
       btn.disabled=false;btn.textContent='Set new password';
       msgEl.textContent='Still verifying your reset link — please wait a moment and try again.';
       msgEl.style.color='var(--amber)';
       return;
     }
-    sb.auth.updateUser({password:newPassword}).then(function(result){
-      if(result.error){
+    const email=session.user&&session.user.email;
+    // Can't read the stored password directly (it's hashed server-side, correctly so) — so we
+    // detect "same as current" by attempting a sign-in with the "new" value. A successful sign-in
+    // is only possible if it matches the password that's actually already set.
+    sb.auth.signInWithPassword({email:email,password:newPassword}).then(function(checkResult){
+      if(!checkResult.error){
         btn.disabled=false;btn.textContent='Set new password';
-        msgEl.textContent=result.error.message;
+        msgEl.textContent='New password must be different from your current password.';
         msgEl.style.color='var(--red)';
         return;
       }
-      // Password changed successfully — sign out and require a fresh sign-in,
-      // rather than silently staying logged in from the recovery session.
-      sb.auth.signOut().then(function(){
-        currentUser=null;currentProfile=null;
-        authMode='signin';
-        justPasswordReset=true;
-        if(S.openTab==='account')renderPanel('account');
+      sb.auth.updateUser({password:newPassword}).then(function(result){
+        if(result.error){
+          btn.disabled=false;btn.textContent='Set new password';
+          msgEl.textContent=result.error.message;
+          msgEl.style.color='var(--red)';
+          return;
+        }
+        // Password changed successfully — sign out and require a fresh sign-in,
+        // rather than silently staying logged in from the recovery session.
+        sb.auth.signOut().then(function(){
+          currentUser=null;currentProfile=null;
+          authMode='signin';
+          justPasswordReset=true;
+          if(S.openTab==='account')renderPanel('account');
+        });
+      }).catch(function(){
+        btn.disabled=false;btn.textContent='Set new password';
+        msgEl.textContent='Network error — try again.';
+        msgEl.style.color='var(--red)';
       });
     }).catch(function(){
       btn.disabled=false;btn.textContent='Set new password';
@@ -1526,10 +1543,9 @@ if(sb){
   sb.auth.onAuthStateChange(function(event){
     if(event==='PASSWORD_RECOVERY'){
       authMode='newpassword';
-      // Don't make the user hunt for this — force the Account panel open so the
-      // "set new password" form is immediately visible, not silently waiting unseen.
-      var accBtn=document.querySelector('.hdr-account-btn')||document.querySelector('[onclick*="toggleTab(\'account\'"]');
-      toggleTab('account',accBtn||null);
+      // Panel-opening is handled once, synchronously, by the URL check in init() —
+      // NOT here. toggleTab() toggles open/closed, so calling it again here would
+      // close a panel the URL check already opened.
     }
     refreshAuthState();
   });
@@ -2474,6 +2490,7 @@ function toggleDone(id){
   const t=S.tasks.find(x=>x.id===id);if(!t)return;
   t.status=t.status==='done'?'pending':'done';
   if(t.status==='done'&&S.activeId===id){clearTmr();S.activeId=null;}
+  if(t.status==='done')updateStreak(); // streak advances only on a real completed task, never just from opening the app
   save();saveHistory();renderAll();
   if(S.openTab==='focus')renderPanel('focus');
   toast(t.status==='done'?`+${t.xp} XP — Mission complete!`:`Unmarked: ${t.name}`);
@@ -2921,7 +2938,6 @@ function init(){
   load();
   applyTheme();
   updateDate();
-  updateStreak();
   updateCatFilter();
   onCatChange();
 
