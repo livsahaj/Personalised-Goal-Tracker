@@ -611,6 +611,16 @@ h1 .line2{
 .feedback-form textarea{min-height:100px}
 .feedback-form input::placeholder,.feedback-form textarea::placeholder{color:var(--text3)}
 
+/* ─── TESTIMONIALS ─────────────────────────────── */
+.testimonial-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem}
+.testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:center;transition:opacity .4s ease}
+.testimonial-card.fading{opacity:0}
+.testimonial-meta{font-style:italic;font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem;text-align:left}
+.testimonial-text{font-family:'Times New Roman',serif;font-style:italic;text-align:left;line-height:1.6;color:var(--text)}
+.testimonial-nav{display:flex;justify-content:center;gap:0.75rem;margin-top:1rem}
+.testimonial-arrow{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;font-size:0.9rem;color:var(--text2)}
+.testimonial-arrow:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
 /* ─── SHARE ─────────────────────────────── */
 .share-section{text-align:center;padding:clamp(60px,8vw,100px) 0}
 .share-section h2{font-size:clamp(1.25rem,2.5vw,1.75rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.65rem}
@@ -993,8 +1003,22 @@ footer{
       <div class="feedback-copy">
         <div class="section-line"></div>
         <h2>Tell us what is actually missing</h2>
-        <p>This app is built based on what real users say — not assumptions. If you used it for a week and something felt off, or something was genuinely missing, please share the feedback. One message changes the roadmap.</p>
+        <p>This app is built based on what real users say — not assumptions. If you used it for a week and something felt off or was genuinely missing, please share your feedback. One message changes the roadmap.</p>
         <a href="https://forms.gle/h9PCqkeepzwbXm4B9" target="_blank" class="btn-primary" style="width:fit-content;margin-top:.5rem">Open feedback form</a>
+      </div>
+      <div class="testimonial-box">
+        <h3 style="margin-bottom:1rem;color:var(--accent);font-weight:700">Noticeable Feedbacks</h3>
+        <div class="testimonial-card" id="testimonialCard">
+          <div id="testimonialEmpty" style="color:var(--text2);font-size:0.9rem">No data available. Please share your feedback. Top 5 will be displayed here.</div>
+          <div id="testimonialContent" style="display:none">
+            <div class="testimonial-meta" id="testimonialMeta"></div>
+            <p class="testimonial-text" id="testimonialText"></p>
+          </div>
+        </div>
+        <div class="testimonial-nav" id="testimonialNav" style="display:none">
+          <button onclick="testimonialPrev()" class="testimonial-arrow">◀</button>
+          <button onclick="testimonialNext()" class="testimonial-arrow">▶</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1422,9 +1446,44 @@ window.handleFeedback=handleFeedback;
 (function(){
   var ANN_KEY='gt_ann_seen_v1';
   var POS_KEY='gt_ann_fab_pos_v1';
+  let testimonials=[];
+  let testimonialIdx=0;
+  let testimonialTimer=null;
+  
+  function loadTestimonials(){
+    if(typeof sb==='undefined'||!sb)return;
+    sb.from('testimonials').select('user_name,joined_date,feedback_text').eq('is_active',true).order('created_at',{ascending:false}).limit(5)
+      .then(function(result){
+        if(!result.error&&result.data)testimonials=result.data;
+        renderTestimonial();
+        if(testimonials.length>1)startTestimonialAutoSlide();
+      });
+  }
+  function renderTestimonial(){
+    const emptyEl=document.getElementById('testimonialEmpty');
+    const contentEl=document.getElementById('testimonialContent');
+    const navEl=document.getElementById('testimonialNav');
+    if(!testimonials.length){emptyEl.style.display='block';contentEl.style.display='none';navEl.style.display='none';return;}
+    emptyEl.style.display='none';contentEl.style.display='block';
+    if(testimonials.length>1)navEl.style.display='flex';
+    const t=testimonials[testimonialIdx];
+    document.getElementById('testimonialMeta').textContent='by '+t.user_name+', joined '+t.joined_date;
+    document.getElementById('testimonialText').textContent='"'+t.feedback_text+'"';
+  }
+  function transitionTestimonial(){
+    const card=document.getElementById('testimonialCard');
+    card.classList.add('fading');
+    setTimeout(function(){renderTestimonial();card.classList.remove('fading');},300);
+  }
+  function testimonialNext(){testimonialIdx=(testimonialIdx+1)%testimonials.length;transitionTestimonial();restartTestimonialAutoSlide();}
+  function testimonialPrev(){testimonialIdx=(testimonialIdx-1+testimonials.length)%testimonials.length;transitionTestimonial();restartTestimonialAutoSlide();}
+  function startTestimonialAutoSlide(){testimonialTimer=setInterval(testimonialNext,6000);}
+  function restartTestimonialAutoSlide(){if(testimonialTimer)clearInterval(testimonialTimer);startTestimonialAutoSlide();}
+  document.addEventListener('DOMContentLoaded',loadTestimonials);
   var ANNOUNCEMENTS=[
-    {id:'ai-v1',title:'AI features on the way',body:'AI features are in development and will be introduced soon. Thank you for your patience.'},
     {id:'welcome-v1',title:'Welcome',body:'Thanks for trying Personal Goal Tracker early. More updates are coming — stay tuned right here.'}
+    {id:'ai-v1',title:'AI features on the way',body:'AI features are in development and will be introduced soon. Thank you for your patience.'},
+    {id:'tier-v1',title:'Pricing Models',body:'Once the relevant features are developed, pricing models will be in effect immediately. Stay tuned.'}
   ];
 
   function getSeen(){try{return JSON.parse(localStorage.getItem(ANN_KEY)||'[]');}catch(e){return[];}}
