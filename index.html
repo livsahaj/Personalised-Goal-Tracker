@@ -612,14 +612,16 @@ h1 .line2{
 .feedback-form input::placeholder,.feedback-form textarea::placeholder{color:var(--text3)}
 
 /* ─── TESTIMONIALS ─────────────────────────────── */
-.testimonial-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem}
+.testimonial-box{padding:0}
 .testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:center;transition:opacity .4s ease}
 .testimonial-card.fading{opacity:0}
 .testimonial-meta{font-style:italic;font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem;text-align:left}
 .testimonial-text{font-family:'Times New Roman',serif;font-style:italic;text-align:left;line-height:1.6;color:var(--text)}
-.testimonial-nav{display:flex;justify-content:center;gap:0.75rem;margin-top:1rem}
-.testimonial-arrow{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;font-size:0.9rem;color:var(--text2)}
-.testimonial-arrow:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.testimonial-nav{display:flex;justify-content:center;margin-top:-14px;position:relative;z-index:2}
+.testimonial-nav-group{display:inline-flex;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;overflow:hidden}
+.testimonial-arrow{width:28px;height:24px;border:none;background:transparent;cursor:pointer;font-size:0.7rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
+.testimonial-arrow:hover{background:var(--accent);color:#fff}
+.testimonial-arrow:first-child{border-right:1px solid var(--border2)}
 
 /* ─── SHARE ─────────────────────────────── */
 .share-section{text-align:center;padding:clamp(60px,8vw,100px) 0}
@@ -1016,8 +1018,10 @@ footer{
           </div>
         </div>
         <div class="testimonial-nav" id="testimonialNav" style="display:none">
-          <button onclick="testimonialPrev()" class="testimonial-arrow">◀</button>
-          <button onclick="testimonialNext()" class="testimonial-arrow">▶</button>
+          <div class="testimonial-nav-group">
+            <button onclick="testimonialPrev()" class="testimonial-arrow">◀</button>
+            <button onclick="testimonialNext()" class="testimonial-arrow">▶</button>
+          </div>
         </div>
       </div>
     </div>
