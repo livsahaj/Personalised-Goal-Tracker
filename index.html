@@ -469,7 +469,8 @@ h1 .line2{
 
 /* ─── PRICING ─────────────────────────────── */
 /* Unified table: tier cards + feature comparison in one structure */
-.compare-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.compare-table{min-width:640px}
 .compare-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);table-layout:fixed}
 
 /* Feature column — 30% wide, tier columns share remaining 70% equally */
@@ -613,7 +614,8 @@ h1 .line2{
 
 /* ─── TESTIMONIALS ─────────────────────────────── */
 .testimonial-box{border-left:1.5px solid var(--border); padding-left:2.5rem}
-.testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:flex-start;transition:opacity .4s ease}
+.testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:flex-start;transition:opacity .4s ease,transform .25s ease,box-shadow .25s ease}
+.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,0.12)}
 .testimonial-card.fading{opacity:0}
 .testimonial-meta{font-style:italic;font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem;text-align:left}
 .testimonial-text{font-family:'Times New Roman',serif;font-style:italic;text-align:left;line-height:1.6;color:var(--text)}
@@ -622,6 +624,9 @@ h1 .line2{
 .testimonial-arrow{width:28px;height:24px;border:none;background:transparent;cursor:pointer;font-size:0.7rem;color:var(--text2);display:flex;align-items:center;justify-content:center}
 .testimonial-arrow:hover{background:var(--accent);color:#fff}
 .testimonial-arrow:first-child{border-right:1px solid var(--border2)}
+.testimonial-arrow:last-child{border-left:1px solid var(--border2)}
+.testimonial-nav.nav-greyed .testimonial-arrow{opacity:0.35;cursor:not-allowed}
+.testimonial-nav.nav-greyed .testimonial-arrow:hover{background:transparent;color:var(--text2)}
 
 /* ─── SHARE ─────────────────────────────── */
 .share-section{text-align:center;padding:clamp(60px,8vw,100px) 0}
@@ -938,22 +943,22 @@ footer{
           <tr class="tier-card-row">
             <td class="feat-col-header"></td>
             <td class="tier-cell">
-              <div class="tier-name">BASIC</div>
+              <div class="tier-name">FREE</div>
               <div class="tier-price">₹0</div><div class="tier-sub-period">always</div>
-              <div class="tier-period">No card required. No hidden limit.</div>
-              <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" class="tier-btn tier-btn-free">Start for free</a>
+              <div class="tier-period">NO card or trial or hidden limit.</div>
+              <div class="tier-btn tier-btn-max" style="cursor:default;opacity:0.85;font-size:0.8rem;line-height:1.4">Currently unavailable</div>
             </td>
             <td class="tier-cell tier-cell-pro">
               <div class="tier-name" style="color:var(--accent)">PRO</div>
               <div class="tier-price">₹449</div><div class="tier-sub-period">per year</div>
               <div class="tier-period">$4.99 USD · €4.99 EUR</div>
-              <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" class="tier-btn tier-btn-pro">Start 10-day free trial</a>
+              <div class="tier-btn tier-btn-max" style="cursor:default;opacity:0.85;font-size:0.8rem;line-height:1.4">Currently unavailable</div>
             </td>
             <td class="tier-cell tier-cell-max">
               <div class="tier-name" style="color:var(--purple)">MAX</div>
               <div class="tier-price">₹799</div><div class="tier-sub-period">per year</div>
               <div class="tier-period">$9.99 USD · €9.99 EUR</div>
-              <a href="https://livsahaj.github.io/Personalised-Goal-Tracker/app.html" class="tier-btn tier-btn-max">Start 10-day free trial</a>
+              <div class="tier-btn tier-btn-max" style="cursor:default;opacity:0.85;font-size:0.8rem;line-height:1.4">Currently unavailable</div>
             </td>
           </tr>
           <!-- Column labels row -->
@@ -985,11 +990,10 @@ footer{
           <tr><td>Export data — PDF and CSV</td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
 
           <tr class="section-row"><td colspan="4">AI coach</td></tr>
-          <tr><td>Goal failure insights</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
           <tr><td>Weekly pattern analysis</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
+          <tr><td>Goal failure insights</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
           <tr><td>Category rebalancing suggestions</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
-          <tr><td>Integrated Personalised AI Advisor</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
-          
+
           <tr class="section-row"><td colspan="4">Support</td></tr>
           <tr><td>Community support</td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td><td><span class="tick">✓</span></td></tr>
           <tr><td>Priority support</td><td><span class="cross">–</span></td><td><span class="cross">–</span></td><td><span class="tick">✓</span></td></tr>
@@ -1013,15 +1017,16 @@ footer{
       <div class="testimonial-box">
         <h3 style="margin-bottom:1rem;color:var(--accent);font-weight:700">Noticeable Feedbacks</h3>
         <div class="testimonial-card" id="testimonialCard">
-          <div id="testimonialEmpty" style="color:var(--text2);font-size:0.9rem">No data available. Please share your feedback. Top feedback will be displayed here.</div>
+          <div id="testimonialEmpty" style="color:var(--text2);font-size:0.9rem">No data available. Please share your feedback. Top 5 will be displayed here.</div>
           <div id="testimonialContent" style="display:none">
             <div class="testimonial-meta" id="testimonialMeta"></div>
             <p class="testimonial-text" id="testimonialText"></p>
           </div>
         </div>
-        <div class="testimonial-nav" id="testimonialNav" style="display:none">
+        <div class="testimonial-nav nav-greyed" id="testimonialNav">
           <div class="testimonial-nav-group">
             <button onclick="testimonialPrev()" class="testimonial-arrow">◀</button>
+            <button onclick="toggleTestimonialPause()" id="testimonialPauseBtn" class="testimonial-arrow">⏸</button>
             <button onclick="testimonialNext()" class="testimonial-arrow">▶</button>
           </div>
         </div>
@@ -1448,15 +1453,27 @@ window.handleFeedback=handleFeedback;
   <div class="ann-reset-hint">Tip: drag the icon to move it anywhere on screen</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(function(){
-  var ANN_KEY='gt_ann_seen_v1';
-  var POS_KEY='gt_ann_fab_pos_v1';
-  let testimonials=[];
-  let testimonialIdx=0;
-  let testimonialTimer=null;
-  
-  function loadTestimonials(){
+// Landing page only reads public data — no auth, no writes, safe with the Publishable key
+const SUPABASE_URL='https://zspanmkkohakufdgynaq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_a9BUn99yPJxzq314suYFEw_ONpgZzqr';
+let sb=null;
+try{
+  if(typeof window.supabase!=='undefined'){
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  }
+}catch(e){console.warn('[Supabase] Failed to initialize:',e.message);}
+</script>
+<script>
+// Testimonials get their own scope — separate from the announcement FAB below,
+// so onclick="testimonialNext()" etc. can actually find these functions.
+let testimonials=[];
+let testimonialIdx=0;
+let testimonialTimer=null;
+let testimonialPaused=false;
+
+function loadTestimonials(){
     if(typeof sb==='undefined'||!sb)return;
     sb.from('testimonials').select('user_name,joined_date,feedback_text').eq('is_active',true).order('created_at',{ascending:false}).limit(5)
       .then(function(result){
@@ -1469,9 +1486,10 @@ window.handleFeedback=handleFeedback;
     const emptyEl=document.getElementById('testimonialEmpty');
     const contentEl=document.getElementById('testimonialContent');
     const navEl=document.getElementById('testimonialNav');
-    if(!testimonials.length){emptyEl.style.display='block';contentEl.style.display='none';navEl.style.display='none';return;}
+    const navGreyed=!testimonials.length||testimonials.length===1;
+    navEl.classList.toggle('nav-greyed',navGreyed);
+    if(!testimonials.length){emptyEl.style.display='block';contentEl.style.display='none';return;}
     emptyEl.style.display='none';contentEl.style.display='block';
-    if(testimonials.length>1)navEl.style.display='flex';
     const t=testimonials[testimonialIdx];
     document.getElementById('testimonialMeta').textContent='by '+t.user_name+', joined '+t.joined_date;
     document.getElementById('testimonialText').textContent='"'+t.feedback_text+'"';
@@ -1481,16 +1499,50 @@ window.handleFeedback=handleFeedback;
     card.classList.add('fading');
     setTimeout(function(){renderTestimonial();card.classList.remove('fading');},300);
   }
-  function testimonialNext(){testimonialIdx=(testimonialIdx+1)%testimonials.length;transitionTestimonial();restartTestimonialAutoSlide();}
-  function testimonialPrev(){testimonialIdx=(testimonialIdx-1+testimonials.length)%testimonials.length;transitionTestimonial();restartTestimonialAutoSlide();}
-  function startTestimonialAutoSlide(){testimonialTimer=setInterval(testimonialNext,6000);}
-  function restartTestimonialAutoSlide(){if(testimonialTimer)clearInterval(testimonialTimer);startTestimonialAutoSlide();}
+  function testimonialNext(){
+    if(!testimonials.length)return;
+    testimonialIdx=(testimonialIdx+1)%testimonials.length;transitionTestimonial();
+    if(!testimonialPaused)restartTestimonialAutoSlide();
+  }
+  function testimonialPrev(){
+    if(!testimonials.length)return;
+    testimonialIdx=(testimonialIdx-1+testimonials.length)%testimonials.length;transitionTestimonial();
+    if(!testimonialPaused)restartTestimonialAutoSlide();
+  }
+  function startTestimonialAutoSlide(){if(testimonialTimer)clearInterval(testimonialTimer);if(testimonialPaused||testimonials.length<=1)return;testimonialTimer=setInterval(testimonialNext,6000);}
+  function restartTestimonialAutoSlide(){startTestimonialAutoSlide();}
+  function toggleTestimonialPause(){
+    testimonialPaused=!testimonialPaused;
+    const btn=document.getElementById('testimonialPauseBtn');
+    if(btn)btn.textContent=testimonialPaused?'▶':'⏸';
+    if(testimonialPaused){if(testimonialTimer)clearInterval(testimonialTimer);}else{startTestimonialAutoSlide();}
+  }
   document.addEventListener('DOMContentLoaded',loadTestimonials);
-  var ANNOUNCEMENTS=[
-    {id:'welcome-v1',title:'Welcome',body:'Thanks for trying Personal Goal Tracker early. More updates are coming — stay tuned right here.'},
-    {id:'ai-v1',title:'AI features on the way',body:'AI features are in development and will be introduced soon. Thank you for your patience.'},
-    {id:'tier-v1',title:'Pricing Models',body:'Once the relevant features are developed, pricing models will be in effect immediately. Stay tuned.'}
-  ];
+</script>
+<script>
+(function(){
+  var ANN_KEY='gt_ann_seen_v1';
+  var POS_KEY='gt_ann_fab_pos_v1';
+  var ANNOUNCEMENTS=[];
+  var annLoaded=false;
+
+  function loadAnnouncements(cb){
+    if(typeof sb==='undefined'||!sb){
+      annLoaded=true;
+      if(cb)cb();
+      return;
+    }
+    sb.from('announcements').select('id,title,body').eq('is_active',true).order('created_at',{ascending:false})
+      .then(function(result){
+        if(!result.error&&result.data)ANNOUNCEMENTS=result.data;
+        annLoaded=true;
+        refreshBadge();
+        if(cb)cb();
+      }).catch(function(){
+        annLoaded=true;
+        if(cb)cb();
+      });
+  }
 
   function getSeen(){try{return JSON.parse(localStorage.getItem(ANN_KEY)||'[]');}catch(e){return[];}}
   function setSeen(ids){try{localStorage.setItem(ANN_KEY,JSON.stringify(ids));}catch(e){}}
@@ -1499,6 +1551,7 @@ window.handleFeedback=handleFeedback;
   function renderAnnList(){
     var list=document.getElementById('annList');
     if(!list)return;
+    if(!annLoaded){list.innerHTML='<div class="ann-empty">Loading…</div>';return;}
     if(!ANNOUNCEMENTS.length){list.innerHTML='<div class="ann-empty">No announcements yet.</div>';return;}
     list.innerHTML=ANNOUNCEMENTS.map(function(a){
       return '<div class="ann-item"><div class="ann-item-title">'+a.title+'</div><div class="ann-item-body">'+a.body+'</div></div>';
@@ -1541,8 +1594,11 @@ window.handleFeedback=handleFeedback;
     panel.classList.toggle('open');
     if(opening){
       renderAnnList();
-      setSeen(ANNOUNCEMENTS.map(function(a){return a.id;}));
-      refreshBadge();
+      loadAnnouncements(function(){
+        renderAnnList();
+        setSeen(ANNOUNCEMENTS.map(function(a){return a.id;}));
+        refreshBadge();
+      });
     }
   };
 
@@ -1614,11 +1670,11 @@ window.handleFeedback=handleFeedback;
     });
   }
 
-  function boot(){refreshBadge();initDrag();}
+  function boot(){loadAnnouncements(refreshBadge);initDrag();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
   else boot();
 })();
 </script>
 
 </body>
-</html>  
+</html>
