@@ -1327,7 +1327,7 @@ function buildAccount(){
     html+=`
       <div class="sec-lbl" style="margin-bottom:0.5rem">Reset your password</div>
       <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">We'll email you a link to set a new password.</div>
-      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')requestPasswordReset()" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <input type="email" id="authEmail" placeholder="Enter your registered email address" onkeydown="if(event.key==='Enter')requestPasswordReset()" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
       <button class="btn btn-sm btn-p" style="width:100%;justify-content:center" onclick="requestPasswordReset()" id="resetReqBtn">Send reset link</button>
       <div id="authMsg" style="font-size:0.7rem;color:var(--text2);margin-top:0.5rem;line-height:1.5"></div>
       <button class="btn btn-sm btn-g" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="switchAuthMode('signin')">← Back to sign in</button>
@@ -1341,18 +1341,18 @@ function buildAccount(){
         <button class="btn btn-sm ${isSignup?'btn-p':'btn-g'}" style="flex:1;justify-content:center" onclick="switchAuthMode('signup')">Sign Up</button>
       </div>
       ${justPasswordReset?(function(){justPasswordReset=false;return '<div style="font-size:0.78rem;color:var(--green);background:var(--bg3);border-radius:var(--rsm);padding:0.6rem 0.75rem;margin-bottom:0.75rem;line-height:1.5">✓ Password updated. Please sign in with your new password.</div>';})():''}
-      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — free tier included.</div>
+      <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Available on every plan — including free tier.</div>
       ${isSignup?`<div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
         <input type="text" id="authFirstName" placeholder="First name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
         <input type="text" id="authLastName" placeholder="Last name" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="flex:1;min-width:0;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
       </div>`:''}
-      <input type="email" id="authEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
+      <input type="email" id="authEmail" placeholder="Enter your Email address" onkeydown="if(event.key==='Enter')${isSignup?'signUpWithPassword()':'signInWithPassword()'}" style="width:100%;padding:0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;margin-bottom:0.5rem;box-sizing:border-box">
       <div style="position:relative;margin-bottom:0.5rem">
-        <input type="password" id="authPassword" placeholder="Password (8+ chars, upper/lower/digit)" oninput="${isSignup?'updateSignupPwChecklist()':''}" onkeydown="if(event.key==='Enter')${isSignup?"document.getElementById('authPasswordConfirm').focus()":'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <input type="password" id="authPassword" placeholder="Enter the password" oninput="${isSignup?'updateSignupPwChecklist()':''}" onkeydown="if(event.key==='Enter')${isSignup?"document.getElementById('authPasswordConfirm').focus()":'signInWithPassword()'}" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
         <button type="button" onclick="togglePwVisibility('authPassword',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
       </div>
       ${isSignup?`<div style="position:relative;margin-bottom:0.7rem">
-        <input type="password" id="authPasswordConfirm" placeholder="Re-enter password" oninput="updateSignupPwChecklist()" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
+        <input type="password" id="authPasswordConfirm" placeholder="Re-enter the password" oninput="updateSignupPwChecklist()" onkeydown="if(event.key==='Enter')signUpWithPassword()" style="width:100%;padding:0.55rem 2.3rem 0.55rem 0.7rem;border-radius:var(--rsm);border:1px solid var(--border2);background:var(--bg3);color:var(--text);font-size:0.82rem;box-sizing:border-box">
         <button type="button" onclick="togglePwVisibility('authPasswordConfirm',this)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:0.95rem;color:var(--text3);padding:0.2rem">👁</button>
       </div>
       <div id="signupPwChecklist" style="background:var(--bg3);border-radius:var(--rsm);padding:0.65rem 0.8rem;margin-bottom:0.85rem;display:flex;flex-direction:column;gap:0.35rem">
