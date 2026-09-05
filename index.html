@@ -589,7 +589,7 @@ h1 .line2{
 
 /* ─── FEEDBACK ─────────────────────────────── */
 .feedback-box{
-  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;
+  display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;
   background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
   padding:clamp(2rem,4vw,3rem);
 }
@@ -612,8 +612,8 @@ h1 .line2{
 .feedback-form input::placeholder,.feedback-form textarea::placeholder{color:var(--text3)}
 
 /* ─── TESTIMONIALS ─────────────────────────────── */
-.testimonial-box{padding:0}
-.testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:center;transition:opacity .4s ease}
+.testimonial-box{border-left:1.5px solid var(--border); padding-left:2.5rem}
+.testimonial-card{background:var(--bg3);border-radius:var(--radius-sm);padding:1.5rem;min-height:160px;display:flex;flex-direction:column;justify-content:flex-start;transition:opacity .4s ease}
 .testimonial-card.fading{opacity:0}
 .testimonial-meta{font-style:italic;font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem;text-align:left}
 .testimonial-text{font-family:'Times New Roman',serif;font-style:italic;text-align:left;line-height:1.6;color:var(--text)}
@@ -693,6 +693,7 @@ footer{
   .compare-table{table-layout:auto}
   .col-feat{width:auto}
   .feedback-box{grid-template-columns:1fr}
+  .testimonial-box{border-left:none;padding-left:0}
   .footer-inner{flex-direction:column;align-items:flex-start;gap:.75rem}
   .footer-center{position:static;transform:none;flex-direction:row}
   .faq-grid{grid-template-columns:1fr}
@@ -1619,4 +1620,4 @@ window.handleFeedback=handleFeedback;
 </script>
 
 </body>
-</html>
+</html>  
