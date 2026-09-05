@@ -3212,6 +3212,14 @@ init();
   padding:0.7rem 0.75rem;border-radius:var(--rsm);
   background:var(--bg3);border:1px solid var(--border);
 }
+.ann-item-new{
+  border-color:var(--accent);
+  animation:annGlow 2s ease-in-out infinite;
+}
+@keyframes annGlow{
+  0%,100%{box-shadow:0 0 6px rgba(37,99,235,0.25)}
+  50%{box-shadow:0 0 14px rgba(37,99,235,0.55)}
+}
 .ann-item-title{font-size:0.8rem;font-weight:600;color:var(--text);margin-bottom:0.25rem}
 .ann-item-body{font-size:0.76rem;color:var(--text2);line-height:1.55}
 .ann-empty{padding:1.5rem 1rem;text-align:center;font-size:0.78rem;color:var(--text3)}
@@ -3253,7 +3261,7 @@ init();
       if(cb)cb();
       return;
     }
-    sb.from('announcements').select('id,title,body').eq('is_active',true).order('created_at',{ascending:false})
+    sb.from('announcements').select('id,title,body,created_at').eq('is_active',true).order('created_at',{ascending:false})
       .then(function(result){
         if(!result.error&&result.data)ANNOUNCEMENTS=result.data;
         annLoaded=true;
@@ -3270,8 +3278,10 @@ init();
     if(!list)return;
     if(!annLoaded){list.innerHTML='<div class="ann-empty">Loading…</div>';return;}
     if(!ANNOUNCEMENTS.length){list.innerHTML='<div class="ann-empty">No announcements yet.</div>';return;}
+    var fiveDaysAgo=Date.now()-5*24*60*60*1000;
     list.innerHTML=ANNOUNCEMENTS.map(function(a){
-      return '<div class="ann-item"><div class="ann-item-title">'+a.title+'</div><div class="ann-item-body">'+a.body+'</div></div>';
+      var isNew=a.created_at&&new Date(a.created_at).getTime()>fiveDaysAgo;
+      return '<div class="ann-item'+(isNew?' ann-item-new':'')+'"><div class="ann-item-title">'+a.title+'</div><div class="ann-item-body">'+a.body+'</div></div>';
     }).join('');
   }
   function refreshBadge(){
